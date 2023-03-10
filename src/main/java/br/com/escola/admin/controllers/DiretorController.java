@@ -13,43 +13,43 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.escola.admin.models.Professor;
-import br.com.escola.admin.services.ProfessorService;
+import br.com.escola.admin.models.Diretor;
+import br.com.escola.admin.services.DiretorService;
 
 @RestController
-@RequestMapping(value = "/professores")
-public class ProfessorController {
+@RequestMapping(value = "/diretores")
+public class DiretorController {
 
-	private final ProfessorService service;
-	
-	public ProfessorController(ProfessorService service) {
+	private final DiretorService service;
+
+	public DiretorController(DiretorService service) {
 		this.service = service;
 	}
-
+	
 	@GetMapping
-	public List<Professor> obterTodos() {
+	public List<Diretor> obterTodos() {
 		return service.obterTodos();
 	}
 	
 	@GetMapping(path = "/{id}")
-	public Professor obter(@PathVariable Long id) {
+	public Diretor obter(@PathVariable Long id) {
 		return service.obter(id);
 	}
 	
 	@PostMapping
 	@ResponseStatus(code = HttpStatus.CREATED)
-	public Professor salvar(@RequestBody Professor professor) {
-		return service.salvar(professor);
+	public Diretor criar(@RequestBody Diretor diretor) {
+		return service.criar(diretor);
 	}
 	
 	@PutMapping(path = "/{id}")
-	public Professor atualizar(@PathVariable Long id, @RequestBody Professor professor) {
-		Professor professorAtualizado = service.atualizar(id, professor);
-		return professorAtualizado;
+	public Diretor atualizar(@PathVariable Long id, @RequestBody Diretor diretor) {
+		return service.atualizar(id, diretor);
 	}
 	
-	@DeleteMapping(path = "/{id}")
-	public void deletar(@PathVariable Long id) {
+	@DeleteMapping(path = "/{id}") 
+	@ResponseStatus(code = HttpStatus.NO_CONTENT)
+	public void delete(@PathVariable Long id) {
 		service.deletar(id);
 	}
 	

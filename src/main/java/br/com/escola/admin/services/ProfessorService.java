@@ -3,8 +3,12 @@ package br.com.escola.admin.services;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import br.com.escola.admin.exceptions.BusinessRuleException;
+import br.com.escola.admin.exceptions.ResourceNotFoundException;
 import br.com.escola.admin.models.Professor;
 import br.com.escola.admin.repositories.ProfessorRepository;
 
@@ -12,6 +16,7 @@ import br.com.escola.admin.repositories.ProfessorRepository;
 public class ProfessorService {
 
 	private final ProfessorRepository repository;
+	private final Logger logger = LoggerFactory.getLogger(ProfessorService.class);
 
 	public ProfessorService(ProfessorRepository repository) {
 		this.repository = repository;
@@ -25,7 +30,9 @@ public class ProfessorService {
 		Optional<Professor> professorSelecionado = repository.obter(id);
 		
 		if (professorSelecionado.isEmpty()) {
-			throw new RuntimeException("Professor nao existe");
+			var exception = new ResourceNotFoundException("Professor não encontrado");
+			logger.debug(exception.getMessage());
+			throw exception;
 		}
 		
 		return professorSelecionado.get();
@@ -33,11 +40,15 @@ public class ProfessorService {
 
 	public Professor salvar(Professor professor) {
 		if (repository.existeComId(professor.getId())) {
-			throw new RuntimeException("Ja existe um professor com esse id");
+			var exception = new BusinessRuleException("Ja existe um professor com esse id");
+			logger.error(exception.getMessage());
+			throw exception;
 		}
 		
 		if (repository.existeComCpf(professor.getCpf())) {
-			throw new RuntimeException("Ja existe um professor com esse cpf");
+			var exception = new BusinessRuleException("Ja existe um professor com esse cpf");
+			logger.error(exception.getMessage());
+			throw exception;
 		}
 		
 		repository.salvar(professor);
@@ -47,7 +58,6 @@ public class ProfessorService {
 	public Professor atualizar(Long id, Professor professor) {
 		Professor professorSalvo = obter(id);
 		
-		professorSalvo.setId(id);
 		professorSalvo.setNome(professor.getNome());
 		professorSalvo.setEspecialidade(professor.getEspecialidade());
 		

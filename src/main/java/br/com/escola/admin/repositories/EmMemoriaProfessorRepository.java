@@ -12,7 +12,7 @@ public class EmMemoriaProfessorRepository implements ProfessorRepository {
 	private List<Professor> professores = new ArrayList<>(
 			Arrays.asList(
 					new Professor(1L, "Marcos", "69278811823", "Engenharia de Produção"),
-					new Professor(2L, "Luis", "49593134808", "Engenharia Eletrica"),
+					new Professor(2L, "Álvaro", "49593134808", "Engenharia Eletrica"),
 					new Professor(3L, "Marcelo", "20306517884", "Engenharia de Software")
 			)
 	);

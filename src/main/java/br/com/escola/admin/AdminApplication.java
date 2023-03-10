@@ -2,6 +2,8 @@ package br.com.escola.admin;
 
 import br.com.escola.admin.repositories.AlunoRepository;
 import br.com.escola.admin.repositories.DatabaseAlunoRepository;
+import br.com.escola.admin.repositories.DiretorRepository;
+import br.com.escola.admin.repositories.EmMemoriaDiretorRepository;
 import br.com.escola.admin.repositories.EmMemoriaProfessorRepository;
 import br.com.escola.admin.repositories.ProfessorRepository;
 
@@ -26,5 +28,11 @@ public class AdminApplication {
     public ProfessorRepository professorRepository() {
     	return new EmMemoriaProfessorRepository();
     }
+    
+    @Bean(name = "diretorRepository")
+    public DiretorRepository diretorRepository() {
+    	return new EmMemoriaDiretorRepository();
+    }
+    
 }
 
