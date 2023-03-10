@@ -1,7 +1,11 @@
 package br.com.escola.admin.services;
 
+import br.com.escola.admin.exceptions.BusinessRuleException;
+import br.com.escola.admin.exceptions.ResourceNotFoundException;
 import br.com.escola.admin.models.Aluno;
 import br.com.escola.admin.repositories.AlunoRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,6 +15,7 @@ import java.util.Optional;
 @Service
 public class AlunoService {
 
+    private final Logger logger = LoggerFactory.getLogger(AlunoService.class);
     //Implementação
     //Abstração
     private final AlunoRepository repository;
@@ -25,14 +30,15 @@ public class AlunoService {
         Optional<Aluno> alunoSelecionado = repository.obterAlunoPorCpf(cpf);
 
         if (alunoSelecionado.isEmpty()) {
-            throw new RuntimeException("Aluno não existe");
+            var exception = new ResourceNotFoundException("Aluno não existe");
+            logger.debug(exception.getMessage());
+            throw exception;
         }
 
         return alunoSelecionado.get();
     }
 
     public List<Aluno> consultarAlunos() {
-        System.out.println("Service");
         return repository.obterAlunos();
     }
 
@@ -40,9 +46,10 @@ public class AlunoService {
         // nao pode add um aluno com mesmo cpf
         //saber se existe um aluno com o cpf informado
         boolean existeAlunoComCpf = repository.existeAlunoComCpf(aluno.getCpf());
-
         if (existeAlunoComCpf) {
-            throw new RuntimeException("Já existe um aluno com esse cpf");
+            var exception = new BusinessRuleException("Já existe um aluno com esse cpf");
+            logger.error(exception.getMessage());
+            throw exception;
         }
 
         repository.salvarAluno(aluno);
