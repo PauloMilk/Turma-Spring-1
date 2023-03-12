@@ -23,14 +23,14 @@ public class ProfessorService {
 	}
 
 	public List<Professor> obterTodos() {
-		return repository.obterTodos();
+		return repository.findAll();
 	}
 
 	public Professor obter(Long id) {
-		Optional<Professor> professorSelecionado = repository.obter(id);
+		Optional<Professor> professorSelecionado = repository.findById(id);
 		
 		if (professorSelecionado.isEmpty()) {
-			var exception = new ResourceNotFoundException("Professor não encontrado");
+			var exception = new ResourceNotFoundException(id);
 			logger.debug(exception.getMessage());
 			throw exception;
 		}
@@ -39,36 +39,27 @@ public class ProfessorService {
 	}
 
 	public Professor salvar(Professor professor) {
-		if (repository.existeComId(professor.getId())) {
-			var exception = new BusinessRuleException("Ja existe um professor com esse id");
-			logger.error(exception.getMessage());
-			throw exception;
-		}
-		
-		if (repository.existeComCpf(professor.getCpf())) {
+		if (repository.existsByCpf(professor.getCpf())) {
 			var exception = new BusinessRuleException("Ja existe um professor com esse cpf");
 			logger.error(exception.getMessage());
 			throw exception;
 		}
 		
-		repository.salvar(professor);
-		return professor;
+		return repository.save(professor);
 	}
 
 	public Professor atualizar(Long id, Professor professor) {
-		Professor professorSalvo = obter(id);
+		if (!repository.existsById(id)) {
+			throw new ResourceNotFoundException(id);
+		}
 		
-		professorSalvo.setNome(professor.getNome());
-		professorSalvo.setEspecialidade(professor.getEspecialidade());
-		
-		return professorSalvo;
+		professor.setId(id);
+		return repository.save(professor);
 	}
 
 	public void deletar(Long id) {
 		Professor professorSalvo = obter(id);
-		repository.deletar(professorSalvo);
+		repository.delete(professorSalvo);
 	}
-	
-	
 	
 }

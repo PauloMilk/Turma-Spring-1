@@ -1,20 +1,15 @@
 package br.com.escola.admin.controllers;
 
-import java.util.List;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-
+import br.com.escola.admin.dtos.ProfessorDto;
 import br.com.escola.admin.models.Professor;
 import br.com.escola.admin.services.ProfessorService;
+import jakarta.validation.Valid;
+import org.springframework.beans.BeanUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/professores")
@@ -27,30 +22,35 @@ public class ProfessorController {
 	}
 
 	@GetMapping
-	public List<Professor> obterTodos() {
-		return service.obterTodos();
+	public ResponseEntity<List<Professor>> obterTodos() {
+		return ResponseEntity.status(HttpStatus.OK).body(service.obterTodos());
 	}
 	
 	@GetMapping(path = "/{id}")
-	public Professor obter(@PathVariable Long id) {
-		return service.obter(id);
+	public ResponseEntity<Professor> obter(@PathVariable Long id) {
+		return ResponseEntity.status(HttpStatus.OK).body(service.obter(id));
 	}
 	
 	@PostMapping
-	@ResponseStatus(code = HttpStatus.CREATED)
-	public Professor salvar(@RequestBody Professor professor) {
-		return service.salvar(professor);
+	public ResponseEntity<Professor> salvar(@RequestBody @Valid ProfessorDto professorDto) {
+		var professor = new Professor();
+		BeanUtils.copyProperties(professorDto, professor);
+
+		return ResponseEntity.status(HttpStatus.CREATED).body(service.salvar(professor));
 	}
 	
 	@PutMapping(path = "/{id}")
-	public Professor atualizar(@PathVariable Long id, @RequestBody Professor professor) {
-		Professor professorAtualizado = service.atualizar(id, professor);
-		return professorAtualizado;
+	public ResponseEntity<Professor> atualizar(@PathVariable Long id, @RequestBody @Valid ProfessorDto professorDto) {
+		var professor = new Professor();
+		BeanUtils.copyProperties(professorDto, professor);
+
+		return ResponseEntity.status(HttpStatus.OK).body(service.atualizar(id, professor));
 	}
 	
 	@DeleteMapping(path = "/{id}")
-	public void deletar(@PathVariable Long id) {
+	public ResponseEntity<Void> deletar(@PathVariable Long id) {
 		service.deletar(id);
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 	
 }

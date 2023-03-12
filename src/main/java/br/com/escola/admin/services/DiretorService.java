@@ -23,14 +23,14 @@ public class DiretorService {
 	}
 
 	public List<Diretor> obterTodos() {
-		return repository.obterTodos();
+		return repository.findAll();
 	}
 
 	public Diretor obter(Long id) {
-		Optional<Diretor> diretorSelecionado = repository.obter(id);
+		Optional<Diretor> diretorSelecionado = repository.findById(id);
 		
 		if (diretorSelecionado.isEmpty()) {
-			var exception = new ResourceNotFoundException("Diretor não encontrado");
+			var exception = new ResourceNotFoundException(id);
 			logger.debug(exception.getMessage());
 			throw exception;
 		}
@@ -39,35 +39,27 @@ public class DiretorService {
 	}
 
 	public Diretor criar(Diretor diretor) {
-		if (repository.existeComId(diretor.getId())) {
-			var exception = new BusinessRuleException("Já existe um diretor para esse id");
-			logger.error(exception.getMessage());
-			throw exception;
-		}
-		
-		if (repository.existeComCpf(diretor.getCpf())) {
+		if (repository.existsByCpf(diretor.getCpf())) {
 			var exception = new BusinessRuleException("Já existe um diretor para esse cpf");
 			logger.error(exception.getMessage());
 			throw exception;
 		}
 		
-		repository.salvar(diretor);
-		return diretor;
+		return repository.save(diretor);
 	}
 
 	public Diretor atualizar(Long id, Diretor diretor) {
-		Diretor diretorSalvo = obter(id);
-		
-		diretorSalvo.setNome(diretor.getNome());
-		diretorSalvo.setCpf(diretor.getCpf());
-		
-		return diretorSalvo;
+		if (!repository.existsById(id)) {
+			throw new ResourceNotFoundException(id);
+		}
+
+		diretor.setId(id);
+		return repository.save(diretor);
 	}
 
 	public void deletar(Long id) {
 		Diretor diretorSalvo = obter(id);
-		repository.deletar(diretorSalvo);
+		repository.delete(diretorSalvo);
 	}
-	
 	
 }

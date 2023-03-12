@@ -1,18 +1,29 @@
 package br.com.escola.admin.models;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "tb_professor")
 public class Professor {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
+	@Column(name = "nome", nullable = false, length = 250)
 	private String nome;
+
+	@Column(name = "cpf", nullable = false, length = 11)
 	private String cpf;
+
+	@Column(name = "especialidade", nullable = false, length = 150)
 	private String especialidade;
 
 	public Professor() {
 
 	}
 	
-	public Professor(Long id, String nome, String cpf, String especialidade) {
-		this.id = id;
+	public Professor(String nome, String cpf, String especialidade) {
 		this.nome = nome;
 		this.cpf = cpf;
 		this.especialidade = especialidade;

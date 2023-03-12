@@ -1,19 +1,28 @@
 package br.com.escola.admin.models;
 
+import jakarta.persistence.*;
+
 import java.util.Objects;
 
+@Entity
+@Table(name = "tb_diretor")
 public class Diretor {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
+	@Column(name = "nome", nullable = false, length = 250)
 	private String nome;
+
+	@Column(name = "cpf", nullable = false, length = 11)
 	private String cpf;
 	
 	public Diretor() {
 
 	}
 	
-	public Diretor(Long id, String nome, String cpf) {
-		this.id = id;
+	public Diretor(String nome, String cpf) {
 		this.nome = nome;
 		this.cpf = cpf;
 	}

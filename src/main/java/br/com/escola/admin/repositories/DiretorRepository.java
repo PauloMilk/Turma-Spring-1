@@ -4,14 +4,10 @@ import java.util.List;
 import java.util.Optional;
 
 import br.com.escola.admin.models.Diretor;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface DiretorRepository {
+public interface DiretorRepository extends JpaRepository<Diretor, Long> {
 
-	Optional<Diretor> obter(Long id);
-	List<Diretor> obterTodos();
-	void salvar(Diretor diretor);
-	void deletar(Diretor diretor);
-	boolean existeComId(Long id);
-	boolean existeComCpf(String cpf);
-	
+	boolean existsByCpf(String cpf);
+
 }
