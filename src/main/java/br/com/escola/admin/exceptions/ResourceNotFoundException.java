@@ -1,7 +1,10 @@
 package br.com.escola.admin.exceptions;
 
 public class ResourceNotFoundException extends RuntimeException {
-    public ResourceNotFoundException(String message) {
-        super(message, null, false, false);
+	private static final long serialVersionUID = 1L;
+
+	public ResourceNotFoundException(Object id) {
+        super("Recurso não encontrado. Id = " + id, null, false, false);
     }
+	
 }
