@@ -25,9 +25,9 @@ public class AlunoService {
         this.repository = repository;
     }
 
-    public Aluno consultarAlunoPorCpf(String cpf) {
+    public Aluno consultarAlunoPorId(Long id) {
 
-        Optional<Aluno> alunoSelecionado = repository.obterAlunoPorCpf(cpf);
+        Optional<Aluno> alunoSelecionado = repository.findById(id);
 
         if (alunoSelecionado.isEmpty()) {
             var exception = new ResourceNotFoundException("Aluno não existe");
@@ -39,43 +39,45 @@ public class AlunoService {
     }
 
     public List<Aluno> consultarAlunos() {
-        return repository.obterAlunos();
+        return repository.findAll();
     }
 
     public Aluno criarAluno(Aluno aluno) {
         // nao pode add um aluno com mesmo cpf
         //saber se existe um aluno com o cpf informado
-        boolean existeAlunoComCpf = repository.existeAlunoComCpf(aluno.getCpf());
-        if (existeAlunoComCpf) {
+        Optional<Aluno> existeAlunoComCpf = repository.findByCpf(aluno.getCpf());
+        if (existeAlunoComCpf.isPresent()) {
             var exception = new BusinessRuleException("Já existe um aluno com esse cpf");
             logger.error(exception.getMessage());
             throw exception;
         }
 
-        repository.salvarAluno(aluno);
+        repository.save(aluno);
         return aluno;
     }
 
-    public Aluno atualizarAluno(String cpf, Aluno aluno) {
-
+    public Aluno atualizarAluno(Long id, Aluno aluno) {
         //TODO: Arrumar bug com teste unitario
-        var alunoSalvo = consultarAlunoPorCpf(cpf);
+        var alunoSalvo = consultarAlunoPorId(id);
+        Optional<Aluno> existeAlunoComEsseCpf = repository.findByCpf(aluno.getCpf());
+        if (existeAlunoComEsseCpf.isPresent()) {
+            throw new BusinessRuleException("Já existe um diretor com esse cpf");
+        }
 
         alunoSalvo.setNome(aluno.getNome());
         alunoSalvo.setCpf(aluno.getCpf());
 
-
-        repository.salvarAluno(alunoSalvo);
+        repository.save(alunoSalvo);
 
         return alunoSalvo;
     }
 
-    public void removerAlunoPorCpf(String cpf) {
+    public void removerAlunoPorId(Long id) {
 
         // Agt já validou se o aluno existe na base.
-        Aluno aluno = consultarAlunoPorCpf(cpf);
+        Aluno aluno = consultarAlunoPorId(id);
 
-        repository.removerAluno(aluno);
+        repository.delete(aluno);
 
     }
 }

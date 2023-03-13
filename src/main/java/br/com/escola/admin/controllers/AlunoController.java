@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("alunos")
 public class AlunoController {
 
     private final AlunoService service;
@@ -15,37 +16,36 @@ public class AlunoController {
         this.service = service;
     }
 
-    @GetMapping("/alunos") //GET
+    @GetMapping //GET
     public List<Aluno> consultarAlunos() {
         System.out.println("Controller");
         return service.consultarAlunos();
     }
 
 
-    @GetMapping("/alunos/{cpf}")
-    public Aluno consultarAlunoPorCpf(@PathVariable String cpf) {
-        Aluno aluno = service.consultarAlunoPorCpf(cpf);
-        return aluno;
+    @GetMapping("/{id}")
+    public Aluno consultarAlunoPorId(@PathVariable Long id) {
+        return service.consultarAlunoPorId(id);
+
     }
 
-    @PostMapping("/alunos")
+    @PostMapping
     public Aluno criarAluno(@RequestBody Aluno aluno) {
-        Aluno alunoSalvo = service.criarAluno(aluno);
-        return alunoSalvo;
+        return service.criarAluno(aluno);
     }
 
 
-    @PutMapping("/alunos/{cpf}")
-    public Aluno atualizarAluno(@PathVariable String cpf, @RequestBody Aluno aluno) {
+    @PutMapping("/{id}")
+    public Aluno atualizarAluno(@PathVariable Long id, @RequestBody Aluno aluno) {
         //Buscando no meu banco de dados o aluno com o cpf informado
-        var alunoAtualizado = service.atualizarAluno(cpf, aluno);
+        var alunoAtualizado = service.atualizarAluno(id, aluno);
 
         return alunoAtualizado;
     }
 
-    @DeleteMapping("/alunos/{cpf}")
-    public void deletarAluno(@PathVariable String cpf) {
-        service.removerAlunoPorCpf(cpf);
+    @DeleteMapping("/{id}")
+    public void deletarAluno(@PathVariable Long id) {
+        service.removerAlunoPorId(id);
     }
 
 
