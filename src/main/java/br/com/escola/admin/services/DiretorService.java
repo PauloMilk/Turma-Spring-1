@@ -3,58 +3,47 @@ package br.com.escola.admin.services;
 import br.com.escola.admin.exceptions.BusinessRuleException;
 import br.com.escola.admin.exceptions.ResourceNotFoundException;
 import br.com.escola.admin.models.Diretor;
-import br.com.escola.admin.repositories.DiretorRepositoryEmMemoria;
+import br.com.escola.admin.repositories.DiretorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class DiretorService {
     @Autowired
-    private DiretorRepositoryEmMemoria repository;
+    private DiretorRepository repository;
     public List<Diretor> obterDiretores(){
-        return repository.obterDiretores();
+        return repository.findAll();
     }
 
     public Diretor cadastrarDiretor(Diretor diretor) {
-        if(existeDiretorPorCpf(diretor.getCpf())){
+        if(findByCpf(diretor.getCpf())!= null){
             throw new BusinessRuleException("Já existe diretor com esse Cpf.");
         }
-        return repository.salvarDiretor(diretor);
+        return repository.save(diretor);
     }
 
     public Diretor atualizarDiretor(Long id, Diretor diretor) {
-        Optional<Diretor> diretorOpt = repository.obterDiretorComCpf(diretor.getCpf());
-        if(diretorOpt.isPresent() && diretorOpt.get().getId() !=  id){
-            throw new BusinessRuleException("Já existe diretor com esse Cpf.");
-        }
         Diretor diretorParaAtualizar = obterDiretorPorId(id);
-        diretorParaAtualizar.setId(id);
-        diretorParaAtualizar.setNome(diretor.getNome());
+        Diretor diretorPorCpf = findByCpf(diretor.getCpf());
+        if(diretorPorCpf != null && !diretorPorCpf.getId().equals(diretorParaAtualizar.getId())){
+            throw new BusinessRuleException("Já existe diretor com esse CPF");
+        }
         diretorParaAtualizar.setCpf(diretor.getCpf());
-        return diretorParaAtualizar;
+        diretorParaAtualizar.setNome(diretor.getNome());
+        return repository.save(diretorParaAtualizar);
     }
 
     public void deletarDiretor(Long id) {
-        Diretor diretorParaAtualizar = obterDiretorPorId(id);
-        repository.removerDiretor(diretorParaAtualizar);
+        repository.delete(repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não existe diretor com esse ID")));
     }
 
     public Diretor obterDiretorPorId(Long id) {
-        Optional<Diretor> diretorOpt = repository.findById(id);
-        if(diretorOpt.isEmpty()){
-            throw new ResourceNotFoundException("Não existe diretor com esse ID");
-        }
-        return diretorOpt.get();
+        return repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não existe diretor com esse ID"));
     }
 
-    public boolean existeDiretorPorCpf(String cpf) {
-        Optional<Diretor> diretorOpt = repository.obterDiretorComCpf(cpf);
-        if(diretorOpt.isEmpty()){
-            return false;
-        }
-        return true;
+    public Diretor findByCpf(String cpf) {
+        return repository.findByCpf(cpf);
     }
 }

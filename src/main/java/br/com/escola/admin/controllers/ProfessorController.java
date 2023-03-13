@@ -1,5 +1,4 @@
 package br.com.escola.admin.controllers;
-
 import br.com.escola.admin.models.Professor;
 import br.com.escola.admin.services.ProfessorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,50 +12,33 @@ public class ProfessorController {
 
     @Autowired
     private ProfessorService service;
+
     @GetMapping("/professores")
-    private ResponseEntity<List<Professor>> obterProfessores(){
+    public ResponseEntity<List<Professor>> consultarProfessores() {
         return ResponseEntity.ok().body(service.obterProfessores());
     }
 
-    @GetMapping("/professores/{id}")
-    private ResponseEntity<?> obterProfessorPorId(@PathVariable Long id){
-        try {
-            return ResponseEntity.ok().body(service.obterProfessorPorId(id));
-        } catch (Exception e){
-            return ResponseEntity.notFound().build();
-        }
 
+    @GetMapping("/professores/{id}")
+    public ResponseEntity<Professor> consultarProfessorPorId(@PathVariable Long id) {
+        return ResponseEntity.ok().body(service.obterProfessorPorId(id));
     }
 
     @PostMapping("/professores")
-    private ResponseEntity<?> cadastrarProfessor(@RequestBody Professor professor){
-        try {
-            return ResponseEntity.ok().body(service.cadastrarProfessor(professor));
-        }
-        catch (RuntimeException ex){
-            return ResponseEntity.badRequest().body(ex.getMessage());
-        }
-
+    public ResponseEntity<Professor> criarProfessor(@RequestBody Professor professor) {
+        return ResponseEntity.created(null).body(service.cadastrarProfessor(professor));
     }
 
+
     @PutMapping("/professores/{id}")
-    private ResponseEntity<?> cadastrarProfessor(@PathVariable Long id, @RequestBody Professor professor){
-        try {
-            return ResponseEntity.ok().body(service.atualizarProfessor(id, professor));
-        }
-        catch (RuntimeException ex){
-            return ResponseEntity.badRequest().body(ex.getMessage());
-        }
+    public ResponseEntity<Professor> atualizarProfessor(@PathVariable Long id, @RequestBody Professor professor) {
+        return ResponseEntity.ok().body(service.atualizarProfessor(id, professor));
     }
 
     @DeleteMapping("/professores/{id}")
-    private ResponseEntity<?> deletarProfessor(@PathVariable Long id){
-        try {
-            service.deletarProfessor(id);
-            return ResponseEntity.ok().body("Professor deletado com sucesso");
-        }
-        catch (RuntimeException ex){
-            return ResponseEntity.badRequest().body(ex.getMessage());
-        }
+    public ResponseEntity<Void> deletarProfessor(@PathVariable Long id) {
+        service.deletarProfessor(id);
+        return ResponseEntity.noContent().build();
     }
+
 }

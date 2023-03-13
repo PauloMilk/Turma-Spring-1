@@ -1,19 +1,20 @@
 package br.com.escola.admin.models;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
 import java.util.Objects;
 
+@Entity
 public class Professor {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String nome;
     private  String cpf;
     private String especialidade;
-
-    public Professor(Long id, String nome, String cpf, String especialidade) {
-        this.id = id;
-        this.nome = nome;
-        this.cpf = cpf;
-        this.especialidade = especialidade;
-    }
 
     public Long getId() {
         return id;

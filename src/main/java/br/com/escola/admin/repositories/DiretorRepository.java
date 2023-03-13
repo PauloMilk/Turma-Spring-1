@@ -1,19 +1,10 @@
 package br.com.escola.admin.repositories;
 
 import br.com.escola.admin.models.Diretor;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
-import java.util.Optional;
+public interface DiretorRepository extends JpaRepository < Diretor, Long> {
 
-public interface DiretorRepository {
+    Diretor findByCpf(String cpf);
 
-    Optional obterDiretorComCpf(String cpf);
-    Optional<Diretor> findById(Long id);
-
-    List<Diretor> obterDiretores();
-
-    Diretor salvarDiretor(Diretor diretor);
-
-
-    void removerDiretor(Diretor diretor);
 }
