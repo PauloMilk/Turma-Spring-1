@@ -13,7 +13,14 @@ public class Diretor {
     private String nome;
     private String cpf;
 
+    public Diretor() {
+    }
 
+    public Diretor(Long id, String nome, String cpf) {
+        this.id = id;
+        this.nome = nome;
+        this.cpf = cpf;
+    }
 
     public Long getId() {
         return id;

@@ -5,6 +5,8 @@ import br.com.escola.admin.exceptions.ResourceNotFoundException;
 import br.com.escola.admin.models.Diretor;
 import br.com.escola.admin.repositories.DiretorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,8 +15,15 @@ import java.util.List;
 public class DiretorService {
     @Autowired
     private DiretorRepository repository;
-    public List<Diretor> obterDiretores(){
-        return repository.findAll();
+//    public List<Diretor> obterDiretores(){
+//        return repository.findAll();
+//    }
+
+    public List<Diretor> obterDiretores(final Long id, final String nome, final String cpf){
+        final Diretor diretor = new Diretor(id,nome,cpf);
+        ExampleMatcher caseInsensitiveExampleMatcher = ExampleMatcher.matchingAll().withIgnoreCase();
+        Example<Diretor> example = Example.of(diretor,caseInsensitiveExampleMatcher);
+        return repository.findAll(example);
     }
 
     public Diretor cadastrarDiretor(Diretor diretor) {
