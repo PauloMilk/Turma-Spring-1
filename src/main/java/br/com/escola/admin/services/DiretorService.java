@@ -15,9 +15,7 @@ import java.util.List;
 public class DiretorService {
     @Autowired
     private DiretorRepository repository;
-//    public List<Diretor> obterDiretores(){
-//        return repository.findAll();
-//    }
+
 
     public List<Diretor> obterDiretores(final Long id, final String nome, final String cpf){
         final Diretor diretor = new Diretor(id,nome,cpf);

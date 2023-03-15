@@ -7,6 +7,7 @@ import br.com.escola.admin.repositories.ProfessorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
 import java.util.List;
 
 @Service
@@ -14,6 +15,8 @@ public class ProfessorService {
 
     @Autowired
     private ProfessorRepository repository;
+
+
     public List<Professor> obterProfessores(){
         return repository.findAll();
     }
