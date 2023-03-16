@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @Table(name = "tb_aluno")
@@ -53,4 +54,17 @@ public class Aluno implements Serializable {
     public String getCpf() {
         return cpf;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Aluno aluno)) return false;
+        return Objects.equals(getId(), aluno.getId()) && Objects.equals(getCpf(), aluno.getCpf());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getCpf());
+    }
+
 }

@@ -3,6 +3,8 @@ package br.com.escola.admin.models;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
+import java.util.Objects;
+
 @Entity
 @Table(name = "tb_professor")
 public class Professor {
@@ -64,5 +66,16 @@ public class Professor {
 	public void setEspecialidade(String especialidade) {
 		this.especialidade = especialidade;
 	}
-	
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Professor professor)) return false;
+		return Objects.equals(getId(), professor.getId()) && Objects.equals(getCpf(), professor.getCpf());
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(getId(), getCpf());
+	}
 }
