@@ -1,6 +1,7 @@
 package br.com.escola.admin.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "tb_professor")
@@ -11,12 +12,15 @@ public class Professor {
 	private Long id;
 
 	@Column(name = "nome", nullable = false, length = 250)
+	@NotBlank(message = "O nome do professor não deve ser vazio ou nulo")
 	private String nome;
 
 	@Column(name = "cpf", nullable = false, length = 11)
+	@NotBlank(message = "O cpf do professor não deve ser vazio ou nulo")
 	private String cpf;
 
 	@Column(name = "especialidade", nullable = false, length = 150)
+	@NotBlank(message = "A especialidade do professor não deve ser vazio ou nulo")
 	private String especialidade;
 
 	public Professor() {

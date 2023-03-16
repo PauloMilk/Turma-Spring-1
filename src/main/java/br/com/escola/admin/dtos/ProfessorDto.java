@@ -7,15 +7,15 @@ import java.io.Serializable;
 
 public class ProfessorDto implements Serializable {
 
-    @NotBlank
+    @NotBlank(message = "O nome do professor não deve ser vazio ou nulo")
     @Size(max = 250)
     private String nome;
 
-    @NotBlank
+    @NotBlank(message = "O cpf do professor não deve ser vazio ou nulo")
     @Size(min = 11, max = 11)
     private String cpf;
 
-    @NotBlank
+    @NotBlank(message = "A especialidade do professor não deve ser vazio ou nulo")
     @Size(max = 150)
     private String especialidade;
 

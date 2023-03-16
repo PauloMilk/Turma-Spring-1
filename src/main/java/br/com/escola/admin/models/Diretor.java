@@ -1,6 +1,7 @@
 package br.com.escola.admin.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 import java.util.Objects;
 
@@ -13,9 +14,11 @@ public class Diretor {
 	private Long id;
 
 	@Column(name = "nome", nullable = false, length = 250)
+	@NotBlank(message = "O nome do diretor não deve ser vazio ou nulo")
 	private String nome;
 
 	@Column(name = "cpf", nullable = false, length = 11)
+	@NotBlank(message = "O cpf do diretor não deve ser vazio ou nulo")
 	private String cpf;
 	
 	public Diretor() {

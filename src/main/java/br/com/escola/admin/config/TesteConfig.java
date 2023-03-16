@@ -1,7 +1,9 @@
 package br.com.escola.admin.config;
 
+import br.com.escola.admin.models.Aluno;
 import br.com.escola.admin.models.Diretor;
 import br.com.escola.admin.models.Professor;
+import br.com.escola.admin.repositories.AlunoRepository;
 import br.com.escola.admin.repositories.DiretorRepository;
 import br.com.escola.admin.repositories.ProfessorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,9 @@ import java.util.Arrays;
 public class TesteConfig implements CommandLineRunner {
 
     @Autowired
+    private AlunoRepository alunoRepository;
+
+    @Autowired
     private ProfessorRepository professorRepository;
 
     @Autowired
@@ -24,9 +29,11 @@ public class TesteConfig implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        /*var aluno1 = new Aluno("06065002003", "Maria de Andrade");
-        var aluno2 = new Aluno("16345356000", "João Pedro Lima");
-        var aluno3 = new Aluno("54067661045", "Rodrigo Silva Pereira");*/
+        var aluno1 = new Aluno("Maria de Andrade", "06065002003");
+        var aluno2 = new Aluno("João Pedro Lima", "16345356000");
+        var aluno3 = new Aluno("Rodrigo Silva Pereira", "54067661045");
+
+        alunoRepository.saveAll(Arrays.asList(aluno1, aluno2, aluno3));
 
         var professor1 = new Professor("Marcelo", "12780604808", "Engenharia de Software");
         var professor2 = new Professor("Álvaro", "99411419836", "Engenharia de Produção");

@@ -1,9 +1,7 @@
 package br.com.escola.admin.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 import java.io.Serializable;
 
@@ -12,19 +10,32 @@ import java.io.Serializable;
 public class Aluno implements Serializable {
 
     @Id
-    @Column(name = "cpf", length = 11)
-    private String cpf;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Column(name = "nome", length = 250)
+    @Column(name = "nome", nullable = false, length = 250)
+    @NotBlank(message = "O nome do aluno não deve ser vazio ou nulo")
     private String nome;
+
+    @Column(name = "cpf", nullable = false, length = 11)
+    @NotBlank(message = "O cpf do aluno não deve ser vazio ou nulo")
+    private String cpf;
 
     public Aluno() {
 
     }
 
-    public Aluno(String cpf, String nome) {
-        this.cpf = cpf;
+    public Aluno(String nome, String cpf) {
         this.nome = nome;
+        this.cpf = cpf;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public void setNome(String nome) {

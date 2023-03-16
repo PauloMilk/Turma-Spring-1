@@ -7,11 +7,11 @@ import java.io.Serializable;
 
 public class DiretorDto implements Serializable {
 
-    @NotBlank
+    @NotBlank(message = "O nome do diretor não deve ser vazio ou nulo")
     @Size(max = 250)
     private String nome;
 
-    @NotBlank
+    @NotBlank(message = "O cpf do diretor não deve ser vazio ou nulo")
     @Size(min = 11, max = 11)
     private String cpf;
 
