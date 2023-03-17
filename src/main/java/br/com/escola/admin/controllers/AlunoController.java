@@ -2,11 +2,15 @@ package br.com.escola.admin.controllers;
 
 import br.com.escola.admin.models.Aluno;
 import br.com.escola.admin.services.AlunoService;
+import org.apache.coyote.Response;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("/alunos")
 public class AlunoController {
 
     private final AlunoService service;
@@ -15,38 +19,30 @@ public class AlunoController {
         this.service = service;
     }
 
-    @GetMapping("/alunos") //GET
-    public List<Aluno> consultarAlunos() {
-        System.out.println("Controller");
-        return service.consultarAlunos();
+    @GetMapping
+    public ResponseEntity<List<Aluno>> obterTodos() {
+        return ResponseEntity.status(HttpStatus.OK).body(service.obterTodos());
     }
 
-
-    @GetMapping("/alunos/{cpf}")
-    public Aluno consultarAlunoPorCpf(@PathVariable String cpf) {
-        Aluno aluno = service.consultarAlunoPorCpf(cpf);
-        return aluno;
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<Aluno> obterPorId(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.obterPorId(id));
     }
 
-    @PostMapping("/alunos")
-    public Aluno criarAluno(@RequestBody Aluno aluno) {
-        Aluno alunoSalvo = service.criarAluno(aluno);
-        return alunoSalvo;
+    @PostMapping
+    public ResponseEntity<Aluno> salvar(@RequestBody Aluno aluno) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.salvar(aluno));
     }
 
-
-    @PutMapping("/alunos/{cpf}")
-    public Aluno atualizarAluno(@PathVariable String cpf, @RequestBody Aluno aluno) {
-        //Buscando no meu banco de dados o aluno com o cpf informado
-        var alunoAtualizado = service.atualizarAluno(cpf, aluno);
-
-        return alunoAtualizado;
+    @PutMapping("/{id}")
+    public ResponseEntity<Aluno> atualizar(@PathVariable Long id, @RequestBody Aluno aluno) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.atualizar(id, aluno));
     }
 
-    @DeleteMapping("/alunos/{cpf}")
-    public void deletarAluno(@PathVariable String cpf) {
-        service.removerAlunoPorCpf(cpf);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        service.deletar(id);
+        return ResponseEntity.noContent().build();
     }
-
 
 }
