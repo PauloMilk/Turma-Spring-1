@@ -4,78 +4,58 @@ import br.com.escola.admin.exceptions.BusinessRuleException;
 import br.com.escola.admin.exceptions.ResourceNotFoundException;
 import br.com.escola.admin.models.Aluno;
 import br.com.escola.admin.repositories.AlunoRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
-
 
 @Service
 public class AlunoService {
+    @Autowired
+    private AlunoRepository repository;
 
-    private final Logger logger = LoggerFactory.getLogger(AlunoService.class);
-    //Implementação
-    //Abstração
-    private final AlunoRepository repository;
 
-    public AlunoService(
-            AlunoRepository repository) {
-        this.repository = repository;
+    public List<Aluno> obterAlunoes(final Long id, final String nome, final String cpf){
+        final Aluno aluno = new Aluno(id,nome,cpf);
+        ExampleMatcher caseInsensitiveExampleMatcher = ExampleMatcher.matchingAll().withIgnoreCase();
+        Example<Aluno> example = Example.of(aluno,caseInsensitiveExampleMatcher);
+        return repository.findAll(example);
     }
 
-    public Aluno consultarAlunoPorCpf(String cpf) {
-
-        Optional<Aluno> alunoSelecionado = repository.obterAlunoPorCpf(cpf);
-
-        if (alunoSelecionado.isEmpty()) {
-            var exception = new ResourceNotFoundException("Aluno não existe");
-            logger.debug(exception.getMessage());
-            throw exception;
+    public Aluno cadastrarAluno(Aluno aluno) {
+        if(findByCpf(aluno.getCpf())!= null){
+            throw new BusinessRuleException("Já existe aluno com esse Cpf.");
         }
-
-        return alunoSelecionado.get();
+        return repository.save(aluno);
     }
 
-    public List<Aluno> consultarAlunos() {
-        return repository.obterAlunos();
-    }
-
-    public Aluno criarAluno(Aluno aluno) {
-        // nao pode add um aluno com mesmo cpf
-        //saber se existe um aluno com o cpf informado
-        boolean existeAlunoComCpf = repository.existeAlunoComCpf(aluno.getCpf());
-        if (existeAlunoComCpf) {
-            var exception = new BusinessRuleException("Já existe um aluno com esse cpf");
-            logger.error(exception.getMessage());
-            throw exception;
+    public Aluno atualizarAluno(Long id, Aluno aluno) {
+        Aluno alunoParaAtualizar = obterAlunoPorId(id);
+        Aluno alunoPorCpf = findByCpf(aluno.getCpf());
+        if(alunoPorCpf != null && !alunoPorCpf.getId().equals(alunoParaAtualizar.getId())){
+            throw new BusinessRuleException("Já existe aluno com esse CPF");
         }
-
-        repository.salvarAluno(aluno);
-        return aluno;
+        alunoParaAtualizar.setCpf(aluno.getCpf());
+        alunoParaAtualizar.setNome(aluno.getNome());
+        return repository.save(alunoParaAtualizar);
     }
 
-    public Aluno atualizarAluno(String cpf, Aluno aluno) {
-
-        //TODO: Arrumar bug com teste unitario
-        var alunoSalvo = consultarAlunoPorCpf(cpf);
-
-        alunoSalvo.setNome(aluno.getNome());
-        alunoSalvo.setCpf(aluno.getCpf());
-
-
-        repository.salvarAluno(alunoSalvo);
-
-        return alunoSalvo;
+    public void deletarAluno(Long id) {
+        repository.delete(repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não existe aluno com esse ID")));
     }
 
-    public void removerAlunoPorCpf(String cpf) {
+    public Aluno obterAlunoPorId(Long id) {
+        return repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não existe aluno com esse ID"));
+    }
 
-        // Agt já validou se o aluno existe na base.
-        Aluno aluno = consultarAlunoPorCpf(cpf);
-
-        repository.removerAluno(aluno);
-
+    public Aluno findByCpf(String cpf) {
+        Aluno aluno = repository.findByCpf(cpf);
+        if(aluno != null){
+            return repository.findByCpf(cpf);
+        } else {
+            throw new ResourceNotFoundException("Aluno não encontrado para o CPF: " + cpf);
+        }
     }
 }

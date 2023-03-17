@@ -6,17 +6,17 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-public class Aluno {
+public class Diretor {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String nome;
     private String cpf;
 
-    public Aluno() {
+    public Diretor() {
     }
 
-    public Aluno(Long id, String nome, String cpf) {
+    public Diretor(Long id, String nome, String cpf) {
         this.id = id;
         this.nome = nome;
         this.cpf = cpf;
