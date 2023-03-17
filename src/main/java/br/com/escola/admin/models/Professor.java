@@ -5,16 +5,24 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
-import java.util.Objects;
-
 @Entity
 public class Professor {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String nome;
-    private  String cpf;
+    private String cpf;
+
     private String especialidade;
+
+    public Professor() {
+    }
+
+    public Professor(Long id, String nome, String cpf) {
+        this.id = id;
+        this.nome = nome;
+        this.cpf = cpf;
+    }
 
     public Long getId() {
         return id;
@@ -46,20 +54,5 @@ public class Professor {
 
     public void setEspecialidade(String especialidade) {
         this.especialidade = especialidade;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Professor professor = (Professor) o;
-
-        return Objects.equals(id, professor.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return id != null ? id.hashCode() : 0;
     }
 }

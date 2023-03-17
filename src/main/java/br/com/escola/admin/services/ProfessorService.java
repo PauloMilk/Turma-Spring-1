@@ -5,20 +5,23 @@ import br.com.escola.admin.exceptions.ResourceNotFoundException;
 import br.com.escola.admin.models.Professor;
 import br.com.escola.admin.repositories.ProfessorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
-
 
 import java.util.List;
 
 @Service
 public class ProfessorService {
-
     @Autowired
     private ProfessorRepository repository;
 
 
-    public List<Professor> obterProfessores(){
-        return repository.findAll();
+    public List<Professor> obterProfessores(final Long id, final String nome, final String cpf){
+        final Professor professor = new Professor(id,nome,cpf);
+        ExampleMatcher caseInsensitiveExampleMatcher = ExampleMatcher.matchingAll().withIgnoreCase();
+        Example<Professor> example = Example.of(professor,caseInsensitiveExampleMatcher);
+        return repository.findAll(example);
     }
 
     public Professor cadastrarProfessor(Professor professor) {
@@ -36,7 +39,6 @@ public class ProfessorService {
         }
         professorParaAtualizar.setCpf(professor.getCpf());
         professorParaAtualizar.setNome(professor.getNome());
-        professorParaAtualizar.setEspecialidade(professor.getEspecialidade());
         return repository.save(professorParaAtualizar);
     }
 
@@ -49,6 +51,11 @@ public class ProfessorService {
     }
 
     public Professor findByCpf(String cpf) {
-        return repository.findByCpf(cpf);
+        Professor professor = repository.findByCpf(cpf);
+        if(professor != null){
+            return repository.findByCpf(cpf);
+        } else {
+            throw new ResourceNotFoundException("Professor não encontrado para o CPF: " + cpf);
+        }
     }
 }

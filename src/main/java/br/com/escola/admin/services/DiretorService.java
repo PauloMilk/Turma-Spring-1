@@ -51,6 +51,11 @@ public class DiretorService {
     }
 
     public Diretor findByCpf(String cpf) {
-        return repository.findByCpf(cpf);
+        Diretor diretor = repository.findByCpf(cpf);
+            if(diretor != null){
+                return repository.findByCpf(cpf);
+            } else {
+                throw new ResourceNotFoundException("Diretor não encontrado para o CPF: " + cpf);
+            }
     }
 }
