@@ -16,9 +16,9 @@ public class EscolaControllerAdvice {
         return new ErrorDTO(ex.getMessage(), "404");
     }
 
-    @ExceptionHandler(BusinessRuleException.class)
+    @ExceptionHandler(value = {BusinessRuleException.class, IllegalArgumentException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorDTO handleBusinessRuleException(BusinessRuleException ex) {
+    public ErrorDTO handleBusinessRuleException(Exception ex) {
         return new ErrorDTO(ex.getMessage(), "400");
     }
 

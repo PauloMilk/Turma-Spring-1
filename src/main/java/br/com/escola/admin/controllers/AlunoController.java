@@ -2,9 +2,12 @@ package br.com.escola.admin.controllers;
 
 import br.com.escola.admin.models.Aluno;
 import br.com.escola.admin.services.AlunoService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static br.com.escola.admin.utils.validators.CPFValidator.isNotValid;
 
 @RestController
 public class AlunoController {
@@ -17,19 +20,35 @@ public class AlunoController {
 
     @GetMapping("/alunos") //GET
     public List<Aluno> consultarAlunos() {
-        System.out.println("Controller");
         return service.consultarAlunos();
     }
 
 
     @GetMapping("/alunos/{cpf}")
     public Aluno consultarAlunoPorCpf(@PathVariable String cpf) {
+        if (isNotValid(cpf)) {
+            throw new IllegalArgumentException("CPF inválido");
+        }
         Aluno aluno = service.consultarAlunoPorCpf(cpf);
         return aluno;
     }
 
     @PostMapping("/alunos")
+    @ResponseStatus(code = HttpStatus.CREATED)
     public Aluno criarAluno(@RequestBody Aluno aluno) {
+
+        if (aluno.getCpf() == null || aluno.getCpf().isEmpty()) {
+            throw new IllegalArgumentException("CPF não pode ser nulo");
+        }
+
+        if (isNotValid(aluno.getCpf())) {
+            throw new IllegalArgumentException("CPF inválido");
+        }
+
+        if (aluno.getNome() == null || aluno.getNome().isEmpty()) {
+            throw new IllegalArgumentException("Nome não pode ser nulo");
+        }
+
         Aluno alunoSalvo = service.criarAluno(aluno);
         return alunoSalvo;
     }

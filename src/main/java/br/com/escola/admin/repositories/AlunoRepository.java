@@ -18,4 +18,6 @@ public interface AlunoRepository {
     boolean existeAlunoComCpf(String cpf);
 
     void removerAluno(Aluno aluno);
+
+    Optional<Aluno> obterAlunoPorNome(String nome);
 }

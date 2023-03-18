@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 
 @Service
@@ -26,16 +25,10 @@ public class AlunoService {
     }
 
     public Aluno consultarAlunoPorCpf(String cpf) {
-
-        Optional<Aluno> alunoSelecionado = repository.obterAlunoPorCpf(cpf);
-
-        if (alunoSelecionado.isEmpty()) {
-            var exception = new ResourceNotFoundException("Aluno não existe");
-            logger.debug(exception.getMessage());
-            throw exception;
-        }
-
-        return alunoSelecionado.get();
+        var aluno = repository.obterAlunoPorCpf(cpf);
+        return aluno.orElseThrow(
+                () -> new ResourceNotFoundException("Aluno não encontrado para o CPF: " + cpf)
+        );
     }
 
     public List<Aluno> consultarAlunos() {
@@ -43,8 +36,6 @@ public class AlunoService {
     }
 
     public Aluno criarAluno(Aluno aluno) {
-        // nao pode add um aluno com mesmo cpf
-        //saber se existe um aluno com o cpf informado
         boolean existeAlunoComCpf = repository.existeAlunoComCpf(aluno.getCpf());
         if (existeAlunoComCpf) {
             var exception = new BusinessRuleException("Já existe um aluno com esse cpf");
@@ -77,5 +68,11 @@ public class AlunoService {
 
         repository.removerAluno(aluno);
 
+    }
+
+    public Aluno obterAlunoPorNome(String nome) {
+        return repository.obterAlunoPorNome(nome).orElseThrow(
+                () -> new ResourceNotFoundException("Aluno não encontrado")
+        );
     }
 }
