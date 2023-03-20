@@ -1,25 +1,29 @@
 package br.com.escola.admin.controllers;
 
-import br.com.escola.admin.exceptions.*;
+import br.com.escola.admin.exceptions.BusinessRuleException;
+import br.com.escola.admin.exceptions.ResourceNotFoundException;
+import br.com.escola.admin.exceptions.StandardError;
+import br.com.escola.admin.exceptions.ValidationStandardError;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestControllerAdvice
+@Log4j2
 public class EscolaControllerAdvice {
-	
+
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<StandardError> handleResourceNotFoundException(ResourceNotFoundException ex
             , HttpServletRequest request) {
@@ -48,19 +52,12 @@ public class EscolaControllerAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ValidationStandardError> handleMethodArgumentNotValidException(
-            MethodArgumentNotValidException ex, HttpServletRequest request) throws JsonProcessingException {
+            MethodArgumentNotValidException ex, HttpServletRequest request) {
 
         List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
 
-        String fields = fieldErrors.stream()
-                .map(fieldError -> fieldError.getField())
-                .sorted()
-                .collect(Collectors.joining(", "));
-
-        String fieldsMessage = fieldErrors.stream()
-                .map(fieldError -> fieldError.getDefaultMessage())
-                .sorted()
-                .collect(Collectors.joining(", "));
+        String fields = montarAtributosComErros(fieldErrors);
+        String fieldsMessage = montarMensagensDeErro(fieldErrors);
 
         HttpStatus status = HttpStatus.BAD_REQUEST;
         String error = "Bad Request";
@@ -74,5 +71,20 @@ public class EscolaControllerAdvice {
 
         return ResponseEntity.status(status).body(standardError);
     }
+
+    private String montarMensagensDeErro(List<FieldError> fieldErrors) {
+        return fieldErrors.stream()
+                .map(fieldError -> fieldError.getDefaultMessage())
+                .sorted()
+                .collect(Collectors.joining(", "));
+    }
+
+    private String montarAtributosComErros(List<FieldError> fieldErrors) {
+        return fieldErrors.stream()
+                .map(fieldError -> fieldError.getField())
+                .sorted()
+                .collect(Collectors.joining(", "));
+    }
+
 
 }

@@ -2,20 +2,22 @@ package br.com.escola.admin.dtos;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
+import org.hibernate.validator.constraints.br.CPF;
 
 import java.io.Serializable;
 
+@Builder
 public class ProfessorDto implements Serializable {
 
-    @NotBlank(message = "O nome do professor não deve ser vazio ou nulo")
+    @NotBlank(message = "Nome não deve ser vazio ou nulo")
     @Size(max = 250)
     private String nome;
 
-    @NotBlank(message = "O cpf do professor não deve ser vazio ou nulo")
-    @Size(min = 11, max = 11)
+    @CPF(message = "Cpf inválido")
     private String cpf;
 
-    @NotBlank(message = "A especialidade do professor não deve ser vazio ou nulo")
+    @NotBlank(message = "Especialidade não deve ser vazio ou nulo")
     @Size(max = 150)
     private String especialidade;
 
