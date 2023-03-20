@@ -8,13 +8,11 @@ import br.com.escola.admin.repositories.DiretorRepository;
 import br.com.escola.admin.repositories.ProfessorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 
 import java.util.Arrays;
 
-@Configuration
-@Profile(value = "test")
+// @Configuration
+// @Profile(value = "test")
 public class TesteConfig implements CommandLineRunner {
 
     @Autowired

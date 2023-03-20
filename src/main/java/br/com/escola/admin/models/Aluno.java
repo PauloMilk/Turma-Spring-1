@@ -67,4 +67,12 @@ public class Aluno implements Serializable {
         return Objects.hash(getId(), getCpf());
     }
 
+    @Override
+    public String toString() {
+        return "Aluno{" +
+                "id=" + id +
+                ", nome='" + nome + '\'' +
+                ", cpf='" + cpf + '\'' +
+                '}';
+    }
 }

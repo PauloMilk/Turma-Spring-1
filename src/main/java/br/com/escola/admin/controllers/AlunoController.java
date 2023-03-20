@@ -1,12 +1,20 @@
 package br.com.escola.admin.controllers;
 
+import br.com.escola.admin.dtos.AlunoDto;
 import br.com.escola.admin.models.Aluno;
 import br.com.escola.admin.services.AlunoService;
+import br.com.escola.admin.utils.validators.CPFValidator;
+import jakarta.validation.Valid;
 import org.apache.coyote.Response;
+import org.springframework.beans.BeanUtils;
+import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Parameter;
 import java.util.List;
 
 @RestController
@@ -30,12 +38,18 @@ public class AlunoController {
     }
 
     @PostMapping
-    public ResponseEntity<Aluno> salvar(@RequestBody Aluno aluno) {
+    public ResponseEntity<Aluno> salvar(@RequestBody @Valid AlunoDto alunoDto) {
+        var aluno = new Aluno();
+        BeanUtils.copyProperties(alunoDto, aluno);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(service.salvar(aluno));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Aluno> atualizar(@PathVariable Long id, @RequestBody Aluno aluno) {
+    public ResponseEntity<Aluno> atualizar(@PathVariable Long id, @RequestBody @Valid AlunoDto alunoDto) {
+        var aluno = new Aluno();
+        BeanUtils.copyProperties(alunoDto, aluno);
+
         return ResponseEntity.status(HttpStatus.OK).body(service.atualizar(id, aluno));
     }
 

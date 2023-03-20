@@ -52,9 +52,10 @@ public class AlunoService {
         return repository.save(alunoSalvo);
     }
 
-    public void deletar(Long id) {
+    public Void deletar(Long id) {
         Aluno alunoSalvo = obterPorId(id);
         repository.delete(alunoSalvo);
+        return null;
     }
 
 }

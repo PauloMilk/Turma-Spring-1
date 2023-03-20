@@ -10,14 +10,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 import java.util.Optional;
+
+import static org.mockito.ArgumentMatchers.*;
 
 @ExtendWith(SpringExtension.class)
 class AlunoServiceTest {
@@ -29,101 +31,244 @@ class AlunoServiceTest {
 
     @BeforeEach
     void setup() {
-        BDDMockito.when(alunoRepositoryMock.findAll()).thenReturn(List.of(
-                AlunoCreator.criarAlunoValido()));
-
-        BDDMockito.when(alunoRepositoryMock.findById(ArgumentMatchers.anyLong())).thenReturn(
-                Optional.of(AlunoCreator.criarAlunoValido())
-        );
-
-        BDDMockito.when(alunoRepositoryMock.save(ArgumentMatchers.any(Aluno.class)))
-                .thenReturn(AlunoCreator.criarAlunoValido());
-
-        BDDMockito.doNothing().when(alunoRepositoryMock).delete(ArgumentMatchers.any(Aluno.class));
     }
 
-    @DisplayName("obterTodos deve retornar lista de alunos quando bem sucedido")
+    // --------------------- CONSULTAR ALUNOS --------------------- //
+
+    // DADO: uma consulta de alunos
+    // QUANDO: não encontrar alunos
+    // ENTÃO: deve retornar lista vazia
+    @DisplayName("Deve retornar lista vazia ao não encontrar alunos")
     @Test
-    void obterTodos_RetornarListaDeAlunos_QuandoBemSucedido() {
-        Aluno aluno = AlunoCreator.criarAlunoValido();
+    void deveRetornarListaVaziaQuandoNaoEncontrarAlunos() {
+        // given
+        List<Aluno> listaEsperada = List.of();
 
-        List<Aluno> alunos = alunoService.obterTodos();
+        // when
+        BDDMockito.when(alunoRepositoryMock.findAll()).thenReturn(listaEsperada);
 
-        Assertions.assertThat(alunos).isNotEmpty().hasSize(1);
-        Assertions.assertThat(alunos.get(0)).isEqualTo(aluno);
+        // then
+        List<Aluno> listaRetornada = alunoService.obterTodos();
+
+        Assertions.assertThatList(listaRetornada).isEmpty();
+        Mockito.verify(alunoRepositoryMock, Mockito.times(1)).findAll();
     }
 
-    @DisplayName("obterPorId deve retornar aluno quando bem sucedido")
+    // DADO: uma consutla de alunos
+    // QUANDO: encontrar alunos
+    // ENTÃO: deve retornar a lista com alunos
+    @DisplayName("Deve retornar uma lista de aluno quando encontrar alunos")
     @Test
-    void obterPorId_RetornarAluno_QuandoBemSucedido() {
-        Long idEsperado = AlunoCreator.criarAlunoValido().getId();
-        Aluno aluno = alunoService.obterPorId(1L);
+    void deveRetornarUmaListaDeAlunoComSucesso() {
+        // given
+        var aluno1 = new Aluno("Maria", "44420047062");
+        aluno1.setId(1L);
+        var aluno2 = new Aluno("Pedro", "10030358094");
+        aluno2.setId(2L);
 
-        Assertions.assertThat(aluno).isNotNull();
-        Assertions.assertThat(aluno.getId()).isEqualTo(idEsperado);
+        List<Aluno> listaEsperada = List.of(aluno1, aluno2);
+
+        // when
+        BDDMockito.when(alunoRepositoryMock.findAll()).thenReturn(listaEsperada);
+
+        // then
+        List<Aluno> listaRetornada = alunoService.obterTodos();
+
+        Assertions.assertThatList(listaRetornada).hasSize(2);
+        Assertions.assertThat(listaRetornada.get(0)).isEqualTo(aluno1);
+        Assertions.assertThat(listaRetornada.get(1)).isEqualTo(aluno2);
+
+        Mockito.verify(alunoRepositoryMock, Mockito.times(1)).findAll();
     }
 
-    @DisplayName("obterPorId deve lancar ResourceNotFoundException quando nao encontrar aluno")
+    // --------------------- CONSULTAR ALUNO --------------------- //
+
+    // DADO: um id inexistente
+    // QUANDO: consultar aluno pelo id
+    // ENTÃO: deve lançar ResourceNotFoundException
+    @DisplayName("Deve lançar ResourceNotFoundException quando não encontrar aluno")
     @Test
-    void obterPorId_LancarResourceNotFoundException_QuandoNaoEncontrarAluno() {
-        BDDMockito.when(alunoRepositoryMock.findById(ArgumentMatchers.anyLong())).thenReturn(
-                Optional.empty());
+    void deveLancarErroQuandoNaoEncontrarAluno() {
+        // given
+        Long idInexistente = 1L;
 
-        Assertions.assertThatExceptionOfType(ResourceNotFoundException.class)
-                .isThrownBy(() -> alunoService.obterPorId(1L));
+        // when
+        BDDMockito.when(alunoRepositoryMock.findById(anyLong())).thenReturn(Optional.empty());
+        Throwable exception = Assertions.catchThrowable(() -> alunoService.obterPorId(idInexistente));
+
+        // then
+        Assertions.assertThat(exception)
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage("Recurso não encontrado. Id = " + idInexistente);
+
+        Mockito.verify(alunoRepositoryMock, Mockito.times(1)).findById(anyLong());
     }
 
-    @DisplayName("salvar deve criar aluno quando bem sucedido")
+    // DADO: id existente
+    // QUANDO: consultar aluno pelo id
+    // ENTÃO: deve retornar o aluno encontrado
+    @DisplayName("Deve retornar aluno com sucesso")
     @Test
-    void salvar_CriarAluno_QuandoBemSucedido() {
-        Aluno aluno = alunoService.salvar(AlunoCreator.criarAlunoValido());
-        Assertions.assertThat(aluno).isNotNull().isEqualTo(AlunoCreator.criarAlunoValido());
+    void deveRetornarAlunoComSucesso() {
+        // given
+        var alunoEsperado = new Aluno("Maria", "93747777031");
+        alunoEsperado.setId(1L);
+
+        // when
+        BDDMockito.when(alunoRepositoryMock.findById(anyLong())).thenReturn(Optional.of(alunoEsperado));
+
+        // then
+        Aluno alunoRetornado = alunoService.obterPorId(alunoEsperado.getId());
+
+        Assertions.assertThat(alunoRetornado).isNotNull();
+        Assertions.assertThat(alunoEsperado.getId()).isEqualTo(alunoRetornado.getId());
+        Assertions.assertThat(alunoEsperado.getNome()).isEqualTo(alunoRetornado.getNome());
+        Assertions.assertThat(alunoEsperado.getCpf()).isEqualTo(alunoRetornado.getCpf());
+
+        Mockito.verify(alunoRepositoryMock, Mockito.times(1)).findById(anyLong());
     }
 
-    @DisplayName("salvar deve lancar BusinessRuleException quando o cpf ja existir")
+    // --------------------- CRIAR ALUNO --------------------- //
+
+    // DADO: um cpf existente
+    // QUANDO: tentar criar aluno
+    // ENTÃO: deve lançar BusinessRuleException
+    @DisplayName("Deve lançar BusinessRuleException ao tentar criar aluno com cpf existente")
     @Test
-    void salvar_LancarBusinessRuleException_QuandoCpfJaExistir() {
-        BDDMockito.when(alunoRepositoryMock.existsByCpf(ArgumentMatchers.anyString()))
-                .thenReturn(true);
+    void deveLancarErroAoTentarCriarAlunoParaUmCpfExistente() {
+        // given
+        var aluno = new Aluno("Marcelo", "93747777031");
 
-        Assertions.assertThatExceptionOfType(BusinessRuleException.class)
-                .isThrownBy(() -> alunoService.salvar(AlunoCreator.criarAlunoValido()));
+        // when
+        BDDMockito.when(alunoRepositoryMock.existsByCpf(anyString())).thenReturn(true);
+        Throwable exception = Assertions.catchThrowable(() -> alunoService.salvar(aluno));
+
+        // then
+        Assertions.assertThat(exception)
+                .isInstanceOf(BusinessRuleException.class)
+                .hasMessage("Já existe um aluno com esse cpf");
+
+        Mockito.verify(alunoRepositoryMock, Mockito.times(1)).existsByCpf(anyString());
+
     }
 
-    @DisplayName("atualizar deve retornar aluno atualizado quando bem sucedido")
+    // DADO: um cpf inexistente
+    // QUANDO: tentar criar aluno
+    // ENTÃO: deve retornar aluno criado
+    @DisplayName("Deve retornar o aluno criado com sucesso")
     @Test
-    void atualizar_RetornarAlunoAtualizado_QuandoBemSucedido() {
-        Aluno alunoAtualizado = alunoService.atualizar(
-                AlunoCreator.criarAlunoValidoParaAtualizar().getId(),
-                AlunoCreator.criarAlunoValidoParaAtualizar());
+    void deveRetornarAlunoCriadoComSucesso() {
+        // given
+        var alunoEsperado = new Aluno("Marcelo", "93747777031");
 
-        Assertions.assertThat(alunoAtualizado).isNotNull().isEqualTo(AlunoCreator.criarAlunoValido());
+        // when
+        BDDMockito.when(alunoRepositoryMock.save(any(Aluno.class))).thenReturn(alunoEsperado);
+
+        // then
+        Aluno alunoSalvo = alunoService.salvar(alunoEsperado);
+
+        Assertions.assertThat(alunoSalvo).isNotNull();
+        Assertions.assertThat(alunoSalvo.getNome()).isEqualTo(alunoEsperado.getNome());
+        Assertions.assertThat(alunoSalvo.getCpf()).isEqualTo(alunoEsperado.getCpf());
+
+        Mockito.verify(alunoRepositoryMock, Mockito.times(1)).existsByCpf(anyString());
+        Mockito.verify(alunoRepositoryMock, Mockito.times(1)).save(any(Aluno.class));
     }
 
-    @DisplayName("atualizar deve lancar ResourceNotFoundException quando nao encontrar aluno")
+    // --------------------- ATUALIZAÇÃO DE ALUNO --------------------- //
+
+    // DADO: um id inexistente
+    // QUANDO: tentar atualizar aluno
+    // ENTÃO: deve lançar ResourceNotFoundException
+    @DisplayName("Deve lançar ResourceNotFoundException ao tentar atualizar aluno para id inexistente")
     @Test
-    void atualizar_LancarResourceNotFoundException_QuandoNaoEncontrarAluno() {
-        BDDMockito.when(alunoRepositoryMock.findById(ArgumentMatchers.anyLong()))
-                .thenReturn(Optional.empty());
+    void deveLancarErroQuandoTentarAtualizarAluno() {
+        // given
+        var aluno = new Aluno("Marcelo", "93747777031");
+        aluno.setId(1L);
 
-        Assertions.assertThatExceptionOfType(ResourceNotFoundException.class)
-                .isThrownBy(() -> alunoService.atualizar(2L, AlunoCreator.criarAlunoValido()));
+        // when
+        BDDMockito.when(alunoRepositoryMock.findById(anyLong())).thenReturn(Optional.empty());
+        Exception exception = Assertions.catchException(() -> alunoService.atualizar(aluno.getId(), aluno));
+
+        // then
+        Assertions.assertThat(exception)
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage("Recurso não encontrado. Id = " + aluno.getId());
+
+        Mockito.verify(alunoRepositoryMock, Mockito.times(1)).findById(anyLong());
+        Mockito.verify(alunoRepositoryMock, Mockito.never()).save(any(Aluno.class));
     }
 
-    @DisplayName("deletar deve remover aluno quando bem sucedido")
+    // DAOD: um id existente
+    // QUANDO: tentar atualizar aluno
+    // ENTÃO: deve retornar aluno atualizado
+    @DisplayName("Deve retornar aluno atualizado com sucesso")
     @Test
-    void deletar_RemoverAluno_QuandoBemSucedido() {
-        Assertions.assertThatCode(() -> alunoService.deletar(1L)).doesNotThrowAnyException();
+    void deveRetornarAlunoAtualizadoComSucesso() {
+        // given
+        var alunoParaAtualizar = new Aluno("Marcelo", "93747777031");
+        alunoParaAtualizar.setId(1L);
+
+        // when
+        BDDMockito.when(alunoRepositoryMock.findById(anyLong())).thenReturn(Optional.of(alunoParaAtualizar));
+        BDDMockito.when(alunoRepositoryMock.save(any(Aluno.class))).thenReturn(alunoParaAtualizar);
+
+        // then
+        Aluno alunoAtualizado = alunoService.atualizar(alunoParaAtualizar.getId(), alunoParaAtualizar);
+
+        Assertions.assertThat(alunoAtualizado).isNotNull();
+        Assertions.assertThat(alunoAtualizado.getId()).isEqualTo(alunoParaAtualizar.getId());
+        Assertions.assertThat(alunoAtualizado.getNome()).isEqualTo(alunoParaAtualizar.getNome());
+        Assertions.assertThat(alunoAtualizado.getCpf()).isEqualTo(alunoParaAtualizar.getCpf());
+
+        Mockito.verify(alunoRepositoryMock, Mockito.times(1)).findById(anyLong());
+        Mockito.verify(alunoRepositoryMock, Mockito.times(1)).save(any(Aluno.class));
     }
 
-    @DisplayName("deletar deve remover aluno quando bem sucedido")
+    // --------------------- DELEÇÃO DE ALUNO --------------------- //
+
+    // DADO: um id inexistente
+    // QUANDO: tentar deletar aluno
+    // ENTÃO: deve lançar ResourceNotFoundException
+    @DisplayName("Deve lançar ResourceNotFoundException ao tentar deletar aluno para id inexistente")
     @Test
-    void deletar_LancarResourceNotFoundException_QuandoNaoEncontrarId() {
-        BDDMockito.when(alunoRepositoryMock.findById(ArgumentMatchers.anyLong()))
-                .thenReturn(Optional.empty());
+    void deveLancarErroAoTentarDeletarAluno() {
+        // given
+        Long idInexistente = 1L;
 
-        Assertions.assertThatExceptionOfType(ResourceNotFoundException.class)
-                .isThrownBy(() -> alunoService.deletar(1L));
+        // when
+        BDDMockito.when(alunoRepositoryMock.findById(anyLong())).thenReturn(Optional.empty());
+        Exception exception = Assertions.catchException(() -> alunoService.deletar(idInexistente));
+
+        // then
+        Assertions.assertThat(exception)
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage("Recurso não encontrado. Id = " + idInexistente);
+
+        Mockito.verify(alunoRepositoryMock, Mockito.times(1)).findById(anyLong());
+        Mockito.verify(alunoRepositoryMock, Mockito.never()).delete(any(Aluno.class));
     }
 
+    // DADO: um id existente
+    // QUANDO: tentar deletar aluno
+    // ENTÃO: deve deletar com sucesso
+    @DisplayName("Deve deletar um aluno com sucesso")
+    @Test
+    void deveDeletarAlunoComSucesso() {
+        // given
+        var alunoParaDeletar = new Aluno("Rodrigo", "93747777031");
+        alunoParaDeletar.setId(1L);
+
+        // when
+        BDDMockito.when(alunoRepositoryMock.findById(anyLong())).thenReturn(Optional.of(alunoParaDeletar));
+        BDDMockito.doNothing().when(alunoRepositoryMock).delete(any(Aluno.class));
+
+        // then
+        Assertions.assertThatCode(() -> alunoService.deletar(alunoParaDeletar.getId()))
+                .doesNotThrowAnyException();
+
+        Mockito.verify(alunoRepositoryMock, Mockito.times(1)).findById(anyLong());
+        Mockito.verify(alunoRepositoryMock, Mockito.times(1)).delete(any(Aluno.class));
+    }
 }

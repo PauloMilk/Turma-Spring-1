@@ -78,4 +78,14 @@ public class Professor {
 	public int hashCode() {
 		return Objects.hash(getId(), getCpf());
 	}
+
+	@Override
+	public String toString() {
+		return "Professor{" +
+				"id=" + id +
+				", nome='" + nome + '\'' +
+				", cpf='" + cpf + '\'' +
+				", especialidade='" + especialidade + '\'' +
+				'}';
+	}
 }

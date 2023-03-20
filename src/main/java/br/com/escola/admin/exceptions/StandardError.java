@@ -3,17 +3,18 @@ package br.com.escola.admin.exceptions;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 public class StandardError {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
-    private Instant instant;
+    private LocalDateTime instant;
     private Integer status;
     private String error;
     private String message;
     private String path;
 
-    public StandardError(Instant instant, Integer status, String error, String message, String path) {
+    public StandardError(LocalDateTime instant, Integer status, String error, String message, String path) {
         this.instant = instant;
         this.status = status;
         this.error = error;
@@ -21,11 +22,11 @@ public class StandardError {
         this.path = path;
     }
 
-    public Instant getInstant() {
+    public LocalDateTime getInstant() {
         return instant;
     }
 
-    public void setInstant(Instant instant) {
+    public void setInstant(LocalDateTime instant) {
         this.instant = instant;
     }
 
