@@ -2,17 +2,17 @@ package br.com.escola.admin.dtos;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import org.hibernate.validator.constraints.br.CPF;
 
 import java.io.Serializable;
 
 public class DiretorDto implements Serializable {
 
-    @NotBlank(message = "O nome do diretor não deve ser vazio ou nulo")
+    @NotBlank(message = "Nome não deve ser vazio ou nulo")
     @Size(max = 250)
     private String nome;
 
-    @NotBlank(message = "O cpf do diretor não deve ser vazio ou nulo")
-    @Size(min = 11, max = 11)
+    @CPF(message = "Cpf inválido")
     private String cpf;
 
     public String getNome() {

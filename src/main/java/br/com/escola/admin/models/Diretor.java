@@ -70,5 +70,14 @@ public class Diretor {
 		Diretor other = (Diretor) obj;
 		return Objects.equals(cpf, other.cpf) && Objects.equals(id, other.id);
 	}
-	
+
+	@Override
+	public String toString() {
+		return "Diretor{" +
+				"id=" + id +
+				", nome='" + nome + '\'' +
+				", cpf='" + cpf + '\'' +
+				'}';
+	}
+
 }
