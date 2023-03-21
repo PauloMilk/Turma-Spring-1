@@ -24,6 +24,10 @@ public class DiretorService {
         return repository.findAll(example);
     }
 
+    public List<Diretor> obterDiretores(){
+        return repository.findAll();
+    }
+
     public Diretor cadastrarDiretor(Diretor diretor) {
         if(findByCpf(diretor.getCpf())!= null){
             throw new BusinessRuleException("Já existe diretor com esse Cpf.");

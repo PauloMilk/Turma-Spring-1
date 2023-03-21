@@ -15,7 +15,12 @@ public class DiretorController {
 
     @GetMapping("/diretores")
     public ResponseEntity<List<Diretor>> consultarDiretores(@RequestParam (required = false) Long id, @RequestParam (required = false) String nome, @RequestParam (required = false) String cpf) {
-        return ResponseEntity.ok().body(service.obterDiretores(id,nome,cpf));
+        if(id != null){
+            return ResponseEntity.ok().body(service.obterDiretores(id,nome,cpf));
+        } else {
+            return ResponseEntity.ok().body(service.obterDiretores());
+        }
+
     }
 
 
