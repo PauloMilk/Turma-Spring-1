@@ -1,5 +1,6 @@
 package br.com.escola.admin.service;
 
+import br.com.escola.admin.exceptions.BusinessRuleException;
 import br.com.escola.admin.exceptions.ResourceNotFoundException;
 import br.com.escola.admin.models.Diretor;
 import br.com.escola.admin.repositories.DiretorRepository;
@@ -42,23 +43,35 @@ public class DiretorServiceTest {
     @Test
     public void deveRetornarDiretorAoConsultarCpf(){
         //BDD
-        //TDD - Teste antes de desenvolver
         //given
-        String cpf = "1234";
         Diretor diretorMock = diretorMock();
 
         //when
         when(mockRepository.findByCpf(any())).thenReturn(diretorMock);
-        Diretor diretor = diretorService.findByCpf(cpf);
+        Diretor diretor = diretorService.findByCpf(diretorMock().getCpf());
         //then
         assertNotNull(diretor);
-        assertEquals(cpf, diretor.getCpf());
+        assertEquals(diretorMock().getCpf(), diretor.getCpf());
         assertEquals("Rafael", diretor.getNome());
     }
 
+
+    @Test
+    public void deveRetornarDiretorAoConsultarId(){
+        //given
+        Diretor diretorMock = diretorMock();
+        //when
+        when(mockRepository.findById(any())).thenReturn(Optional.of(diretorMock()));
+        Diretor diretor = diretorService.obterDiretorPorId(diretorMock().getId());
+        //then
+        assertNotNull(diretor);
+        assertEquals(diretorMock().getCpf(), diretor.getCpf());
+        assertEquals("Rafael", diretor.getNome());
+    }
+
+
     @Test
     public void deveRetornarErroQuandoDeletarDiretorInexistente(){
-        //BDD
         //given
         Long id = 1L;
         //when
@@ -82,6 +95,49 @@ public class DiretorServiceTest {
         // then
         verify(mockRepository, times(1)).delete(diretor);
     }
+
+    @Test
+    public void deveRetornarErroAoAtualizarUmDiretorComCpfRepetido() {
+        // given
+        Diretor diretor2 = new Diretor();
+        diretor2.setId(2L);
+        diretor2.setCpf("1234");
+        Diretor diretor = diretorMock();
+        when(mockRepository.findById(1L)).thenReturn(Optional.of(diretor));
+        when(mockRepository.findByCpf("1234")).thenReturn(diretor);
+        when(mockRepository.findById(2L)).thenReturn(Optional.of(diretor2));
+
+        // when
+        Throwable exception = Assertions.catchThrowable(() -> diretorService.atualizarDiretor(2L, diretor2));
+
+
+        // then
+        Assertions.assertThat(exception)
+                .isInstanceOf(BusinessRuleException.class)
+                .hasMessage("Já existe diretor com esse CPF");
+
+    }
+    @Test
+    public void deveAtualizarUmDiretor() {
+        // given
+        Diretor diretor = diretorMock();
+        when(mockRepository.findById(1L)).thenReturn(Optional.of(diretor));
+        when(mockRepository.findByCpf("1234")).thenReturn(diretor);
+
+        // when
+
+        Diretor diretorAtualizado = diretorService.obterDiretorPorId(1L);
+        diretorAtualizado.setNome("João");
+        diretorAtualizado.setCpf("1234");
+        diretorService.atualizarDiretor(1L, diretorAtualizado);
+
+        // then
+        assertEquals(diretor.getNome(),"João");
+
+
+    }
+
+
 
 
     private Diretor diretorMock(){

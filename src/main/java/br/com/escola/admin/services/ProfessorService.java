@@ -53,7 +53,7 @@ public class ProfessorService {
     public Professor findByCpf(String cpf) {
         Professor professor = repository.findByCpf(cpf);
         if(professor != null){
-            return repository.findByCpf(cpf);
+            return professor;
         } else {
             throw new ResourceNotFoundException("Professor não encontrado para o CPF: " + cpf);
         }
