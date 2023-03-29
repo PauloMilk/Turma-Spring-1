@@ -1,5 +1,6 @@
 package br.com.escola.admin.services;
 
+import br.com.escola.admin.controllers.DTO.RelatorioNotas;
 import br.com.escola.admin.exceptions.ResourceNotFoundException;
 import br.com.escola.admin.models.Curso;
 import br.com.escola.admin.models.CursoAlunoNota;
@@ -10,6 +11,8 @@ import br.com.escola.admin.repositories.CursoRepositoy;
 import br.com.escola.admin.repositories.ProfessorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class CursoService {
@@ -42,5 +45,11 @@ public class CursoService {
     public CursoAlunoNota cadastrarNota(Long idCurso, Long idAluno, Double nota) {
         CursoAlunoNotaId cursoAlunoNotaId = new CursoAlunoNotaId(idAluno,idCurso);
         return cursoAlunoNotaRepository.save(new CursoAlunoNota(cursoAlunoNotaId, nota));
+    }
+
+
+    public List<RelatorioNotas> relatorioNotas() {
+        return cursoAlunoNotaRepository.gerarRelatorio();
+
     }
 }
