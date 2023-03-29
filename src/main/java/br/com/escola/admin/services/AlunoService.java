@@ -25,7 +25,7 @@ public class AlunoService {
     }
 
     public Aluno cadastrarAluno(Aluno aluno) {
-        if(findByCpf(aluno.getCpf())!= null){
+        if(findByCpfCadastro(aluno.getCpf())!= null){
             throw new BusinessRuleException("Já existe aluno com esse Cpf.");
         }
         return repository.save(aluno);
@@ -57,5 +57,9 @@ public class AlunoService {
         } else {
             throw new ResourceNotFoundException("Aluno não encontrado para o CPF: " + cpf);
         }
+    }
+
+    public Aluno findByCpfCadastro(String cpf) {
+            return repository.findByCpf(cpf);
     }
 }

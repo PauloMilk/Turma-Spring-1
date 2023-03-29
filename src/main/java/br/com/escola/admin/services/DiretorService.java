@@ -29,7 +29,7 @@ public class DiretorService {
     }
 
     public Diretor cadastrarDiretor(Diretor diretor) {
-        if(findByCpf(diretor.getCpf())!= null){
+        if(findByCpfCadastro(diretor.getCpf())!= null){
             throw new BusinessRuleException("Já existe diretor com esse Cpf.");
         }
         return repository.save(diretor);
@@ -61,5 +61,9 @@ public class DiretorService {
             } else {
                 throw new ResourceNotFoundException("Diretor não encontrado para o CPF: " + cpf);
             }
+    }
+
+    public Diretor findByCpfCadastro(String cpf) {
+            return repository.findByCpf(cpf);
     }
 }

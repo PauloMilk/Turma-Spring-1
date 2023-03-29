@@ -25,7 +25,7 @@ public class ProfessorService {
     }
 
     public Professor cadastrarProfessor(Professor professor) {
-        if(findByCpf(professor.getCpf())!= null){
+        if(findByCpfCadastro(professor.getCpf())!= null){
             throw new BusinessRuleException("Já existe professor com esse Cpf.");
         }
         return repository.save(professor);
@@ -58,4 +58,10 @@ public class ProfessorService {
             throw new ResourceNotFoundException("Professor não encontrado para o CPF: " + cpf);
         }
     }
+
+    public Professor findByCpfCadastro(String cpf) {
+            return repository.findByCpf(cpf);
+    }
+
+
 }
