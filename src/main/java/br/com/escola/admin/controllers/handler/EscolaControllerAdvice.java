@@ -1,10 +1,9 @@
-package br.com.escola.admin.controllers;
+package br.com.escola.admin.controllers.handler;
 
 import br.com.escola.admin.exceptions.BusinessRuleException;
 import br.com.escola.admin.exceptions.ResourceNotFoundException;
 import br.com.escola.admin.exceptions.StandardError;
 import br.com.escola.admin.exceptions.ValidationStandardError;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -15,10 +14,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDateTime;
-import java.util.*;
-import java.util.function.Function;
+import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @RestControllerAdvice
 @Log4j2

@@ -1,5 +1,6 @@
 package br.com.escola.admin.controllers;
 
+import br.com.escola.admin.controllers.professor.ProfessorController;
 import br.com.escola.admin.exceptions.BusinessRuleException;
 import br.com.escola.admin.exceptions.ResourceNotFoundException;
 import br.com.escola.admin.models.Professor;

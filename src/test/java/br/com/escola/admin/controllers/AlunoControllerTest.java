@@ -1,11 +1,11 @@
 package br.com.escola.admin.controllers;
 
+import br.com.escola.admin.controllers.aluno.AlunoController;
 import br.com.escola.admin.exceptions.BusinessRuleException;
 import br.com.escola.admin.exceptions.ResourceNotFoundException;
 import br.com.escola.admin.models.Aluno;
 import br.com.escola.admin.services.AlunoService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -223,7 +223,7 @@ class AlunoControllerTest {
                 .andExpect(jsonPath("message").value("Verifique os campo(s) com erro"))
                 .andExpect(jsonPath("path").value(ALUNO_PATH))
                 .andExpect(jsonPath("fields").value("nome"))
-                .andExpect(jsonPath("fieldsMessage").value("O nome do aluno não deve ser vazio ou nulo"));
+                .andExpect(jsonPath("fieldsMessage").value("Nome não deve ser vazio ou nulo"));
 
         Mockito.verify(alunoServiceMock, Mockito.never()).salvar(any(Aluno.class));
 
@@ -236,7 +236,7 @@ class AlunoControllerTest {
                 .andExpect(jsonPath("path").value(ALUNO_PATH))
                 .andExpect(jsonPath("fields").value("cpf, nome"))
                 .andExpect(jsonPath("fieldsMessage").value("Cpf inválido, " +
-                        "O nome do aluno não deve ser vazio ou nulo" ))
+                        "Nome não deve ser vazio ou nulo" ))
                 .andDo(MockMvcResultHandlers.print());
 
         Mockito.verify(alunoServiceMock, Mockito.never()).salvar(any(Aluno.class));
@@ -475,7 +475,7 @@ class AlunoControllerTest {
                 .andExpect(jsonPath("message").value("Verifique os campo(s) com erro"))
                 .andExpect(jsonPath("path").value(ALUNO_PATH + "/2"))
                 .andExpect(jsonPath("fields").value("nome"))
-                .andExpect(jsonPath("fieldsMessage").value("O nome do aluno não deve ser vazio ou nulo"));
+                .andExpect(jsonPath("fieldsMessage").value("Nome não deve ser vazio ou nulo"));
 
         Mockito.verify(alunoServiceMock, Mockito.never()).atualizar(anyLong(), any(Aluno.class));
 
@@ -488,7 +488,7 @@ class AlunoControllerTest {
                 .andExpect(jsonPath("path").value(ALUNO_PATH + "/3"))
                 .andExpect(jsonPath("fields").value("cpf, nome"))
                 .andExpect(jsonPath("fieldsMessage").value("Cpf inválido, " +
-                        "O nome do aluno não deve ser vazio ou nulo" ))
+                        "Nome não deve ser vazio ou nulo" ))
                 .andDo(MockMvcResultHandlers.print());
 
         Mockito.verify(alunoServiceMock, Mockito.never()).atualizar(anyLong(), any(Aluno.class));

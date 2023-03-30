@@ -11,13 +11,14 @@ public class Diretor {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "cd_diretor")
 	private Long id;
 
-	@Column(name = "nome", nullable = false, length = 250)
+	@Column(name = "nm_diretor", nullable = false, length = 250)
 	@NotBlank(message = "O nome do diretor não deve ser vazio ou nulo")
 	private String nome;
 
-	@Column(name = "cpf", nullable = false, length = 11)
+	@Column(name = "cd_cpf", nullable = false, length = 11)
 	@NotBlank(message = "O cpf do diretor não deve ser vazio ou nulo")
 	private String cpf;
 	

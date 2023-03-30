@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "tb_aluno")
@@ -12,15 +14,23 @@ public class Aluno implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "cd_aluno")
     private Long id;
 
-    @Column(name = "nome", nullable = false, length = 250)
+    @Column(name = "nm_aluno", nullable = false, length = 250)
     @NotBlank(message = "O nome do aluno não deve ser vazio ou nulo")
     private String nome;
 
-    @Column(name = "cpf", nullable = false, length = 11)
+    @Column(name = "cd_cpf", nullable = false, length = 11)
     @NotBlank(message = "O cpf do aluno não deve ser vazio ou nulo")
     private String cpf;
+
+    @ManyToMany
+    @JoinTable(name = "tb_aluno_curso",
+            joinColumns = @JoinColumn(name = "cd_aluno"),
+            inverseJoinColumns = @JoinColumn(name = "cd_curso")
+    )
+    private Set<Curso> cursos = new HashSet<>();
 
     public Aluno() {
 
@@ -31,6 +41,9 @@ public class Aluno implements Serializable {
         this.cpf = cpf;
     }
 
+    public boolean estaMatriculado(Curso curso) {
+        return this.cursos.contains(curso);
+    }
     public Long getId() {
         return id;
     }
@@ -53,6 +66,10 @@ public class Aluno implements Serializable {
 
     public String getCpf() {
         return cpf;
+    }
+
+    public Set<Curso> getCursos() {
+        return cursos;
     }
 
     @Override

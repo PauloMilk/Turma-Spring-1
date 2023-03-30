@@ -1,29 +1,41 @@
 package br.com.escola.admin.models;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
+@JsonIdentityInfo(
+		generator = ObjectIdGenerators.PropertyGenerator.class,
+		property = "id"
+)
 @Entity
 @Table(name = "tb_professor")
 public class Professor {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "cd_professor")
 	private Long id;
 
-	@Column(name = "nome", nullable = false, length = 250)
+	@Column(name = "nm_professor", nullable = false, length = 250)
 	@NotBlank(message = "O nome do professor não deve ser vazio ou nulo")
 	private String nome;
 
-	@Column(name = "cpf", nullable = false, length = 11)
+	@Column(name = "cd_cpf", nullable = false, length = 11)
 	@NotBlank(message = "O cpf do professor não deve ser vazio ou nulo")
 	private String cpf;
 
-	@Column(name = "especialidade", nullable = false, length = 150)
+	@Column(name = "ds_especialidade", nullable = false, length = 150)
 	@NotBlank(message = "A especialidade do professor não deve ser vazio ou nulo")
 	private String especialidade;
+
+	@OneToMany(mappedBy = "professor")
+	private Set<Curso> cursos = new HashSet<>();
 
 	public Professor() {
 
@@ -33,6 +45,10 @@ public class Professor {
 		this.nome = nome;
 		this.cpf = cpf;
 		this.especialidade = especialidade;
+	}
+
+	public void adicionarCurso(Curso curso) {
+		this.cursos.add(curso);
 	}
 
 	public Long getId() {
@@ -65,6 +81,10 @@ public class Professor {
 
 	public void setEspecialidade(String especialidade) {
 		this.especialidade = especialidade;
+	}
+
+	public Set<Curso> getCursos() {
+		return cursos;
 	}
 
 	@Override

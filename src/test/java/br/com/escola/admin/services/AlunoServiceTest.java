@@ -4,7 +4,6 @@ import br.com.escola.admin.exceptions.BusinessRuleException;
 import br.com.escola.admin.exceptions.ResourceNotFoundException;
 import br.com.escola.admin.models.Aluno;
 import br.com.escola.admin.repositories.AlunoRepository;
-import br.com.escola.admin.utils.AlunoCreator;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
