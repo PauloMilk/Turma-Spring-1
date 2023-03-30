@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public class DatabaseAlunoRepository implements AlunoRepository {
@@ -44,4 +45,5 @@ public class DatabaseAlunoRepository implements AlunoRepository {
     public Optional<Aluno> obterAlunoPorNome(String nome) {
         return jpa.obterAlunoPorNome(nome);
     }
+
 }

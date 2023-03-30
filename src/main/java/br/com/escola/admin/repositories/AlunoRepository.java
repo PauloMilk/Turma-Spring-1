@@ -4,6 +4,7 @@ import br.com.escola.admin.models.Aluno;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 //ABSTRAÇÃO
 public interface AlunoRepository {
@@ -20,4 +21,5 @@ public interface AlunoRepository {
     void removerAluno(Aluno aluno);
 
     Optional<Aluno> obterAlunoPorNome(String nome);
+
 }

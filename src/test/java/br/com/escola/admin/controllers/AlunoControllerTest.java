@@ -1,5 +1,6 @@
 package br.com.escola.admin.controllers;
 
+import br.com.escola.admin.controllers.aluno.AlunoController;
 import br.com.escola.admin.exceptions.BusinessRuleException;
 import br.com.escola.admin.exceptions.ResourceNotFoundException;
 import br.com.escola.admin.models.Aluno;
@@ -25,6 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(AlunoController.class)
 class AlunoControllerTest {
+
 
     private static final String ALUNO_PATH = "/alunos";
     @Autowired
