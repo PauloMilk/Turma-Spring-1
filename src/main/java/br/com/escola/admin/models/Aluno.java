@@ -1,9 +1,6 @@
 package br.com.escola.admin.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Aluno {
@@ -11,6 +8,8 @@ public class Aluno {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String nome;
+
+    @Column(name = "cpf", unique = true)
     private String cpf;
 
     public Aluno() {

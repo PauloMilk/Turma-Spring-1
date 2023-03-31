@@ -3,6 +3,7 @@ package br.com.escola.admin.controllers;
 import br.com.escola.admin.exceptions.BusinessRuleException;
 import br.com.escola.admin.exceptions.ErrorDTO;
 import br.com.escola.admin.exceptions.ResourceNotFoundException;
+import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -31,14 +32,19 @@ public class EscolaControllerAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
-        Map<String, String> errorDTOList = new HashMap<>();
+    public List<ErrorDTO> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+        List<ErrorDTO> errorDTOList = new ArrayList<>();
         ex.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
-            errorDTOList.put(fieldName, errorMessage);
+            errorDTOList.add(new ErrorDTO(fieldName, errorMessage));
         });
         return errorDTOList;
     }
 
+    @ExceptionHandler(JdbcSQLIntegrityConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorDTO handleBusinessRuleException(JdbcSQLIntegrityConstraintViolationException ex) {
+        return new ErrorDTO(ex.getMessage(), "400");
+    }
 }
