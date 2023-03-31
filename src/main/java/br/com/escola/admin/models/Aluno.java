@@ -22,6 +22,11 @@ public class Aluno {
         this.cpf = cpf;
     }
 
+    public Aluno(String nome, String cpf) {
+        this.nome = nome;
+        this.cpf = cpf;
+    }
+
     public Long getId() {
         return id;
     }

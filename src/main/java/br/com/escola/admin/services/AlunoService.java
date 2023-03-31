@@ -1,5 +1,7 @@
 package br.com.escola.admin.services;
 
+import br.com.escola.admin.controllers.aluno.dto.AlunoPostRequest;
+import br.com.escola.admin.controllers.aluno.mapper.AlunoMapper;
 import br.com.escola.admin.exceptions.BusinessRuleException;
 import br.com.escola.admin.exceptions.ResourceNotFoundException;
 import br.com.escola.admin.models.Aluno;
@@ -24,10 +26,8 @@ public class AlunoService {
         return repository.findAll(example);
     }
 
-    public Aluno cadastrarAluno(Aluno aluno) {
-        if(findByCpfCadastro(aluno.getCpf())!= null){
-            throw new BusinessRuleException("Já existe aluno com esse Cpf.");
-        }
+    public Aluno cadastrarAluno(AlunoPostRequest alunoRequest) {
+        Aluno aluno = AlunoMapper.INSTANCE.alunoRequestToAluno(alunoRequest);
         return repository.save(aluno);
     }
 

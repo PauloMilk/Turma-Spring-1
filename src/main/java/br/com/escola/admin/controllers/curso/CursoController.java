@@ -1,6 +1,6 @@
-package br.com.escola.admin.controllers;
+package br.com.escola.admin.controllers.curso;
 
-import br.com.escola.admin.controllers.DTO.RelatorioNotas;
+import br.com.escola.admin.controllers.curso.dto.RelatorioNotasResponse;
 import br.com.escola.admin.models.Curso;
 import br.com.escola.admin.models.CursoAlunoNota;
 import br.com.escola.admin.services.CursoService;
@@ -30,7 +30,7 @@ public class CursoController {
     }
 
     @GetMapping("/relatorio")
-    public ResponseEntity<List<RelatorioNotas>> relatorio(){
+    public ResponseEntity<List<RelatorioNotasResponse>> relatorio(){
         return ResponseEntity.ok().body(service.relatorioNotas());
     }
 

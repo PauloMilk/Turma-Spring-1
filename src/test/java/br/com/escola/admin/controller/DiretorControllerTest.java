@@ -1,6 +1,6 @@
 package br.com.escola.admin.controller;
 
-import br.com.escola.admin.controllers.DiretorController;
+import br.com.escola.admin.controllers.diretor.DiretorController;
 import br.com.escola.admin.exceptions.BusinessRuleException;
 import br.com.escola.admin.models.Diretor;
 import br.com.escola.admin.services.DiretorService;
@@ -19,7 +19,6 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

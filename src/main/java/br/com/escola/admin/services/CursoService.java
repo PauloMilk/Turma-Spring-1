@@ -1,6 +1,6 @@
 package br.com.escola.admin.services;
 
-import br.com.escola.admin.controllers.DTO.RelatorioNotas;
+import br.com.escola.admin.controllers.curso.dto.RelatorioNotasResponse;
 import br.com.escola.admin.exceptions.ResourceNotFoundException;
 import br.com.escola.admin.models.Curso;
 import br.com.escola.admin.models.CursoAlunoNota;
@@ -48,7 +48,7 @@ public class CursoService {
     }
 
 
-    public List<RelatorioNotas> relatorioNotas() {
+    public List<RelatorioNotasResponse> relatorioNotas() {
         return cursoAlunoNotaRepository.gerarRelatorio();
 
     }

@@ -1,4 +1,4 @@
-package br.com.escola.admin.controllers;
+package br.com.escola.admin.controllers.professor;
 
 import br.com.escola.admin.models.Professor;
 import br.com.escola.admin.services.ProfessorService;

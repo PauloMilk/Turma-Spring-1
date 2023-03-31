@@ -1,7 +1,9 @@
-package br.com.escola.admin.controllers;
+package br.com.escola.admin.controllers.aluno;
 
+import br.com.escola.admin.controllers.aluno.dto.AlunoPostRequest;
 import br.com.escola.admin.models.Aluno;
 import br.com.escola.admin.services.AlunoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,8 +27,8 @@ public class AlunoController {
     }
 
     @PostMapping("/alunos")
-    public ResponseEntity<Aluno> criarAluno(@RequestBody Aluno aluno) {
-        return ResponseEntity.created(null).body(service.cadastrarAluno(aluno));
+    public ResponseEntity<Aluno> criarAluno(@RequestBody @Valid AlunoPostRequest request) {
+        return ResponseEntity.created(null).body(service.cadastrarAluno(request));
     }
 
 

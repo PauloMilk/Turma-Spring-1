@@ -1,4 +1,4 @@
-package br.com.escola.admin.controllers;
+package br.com.escola.admin.controllers.diretor;
 
 import br.com.escola.admin.models.Diretor;
 import br.com.escola.admin.services.DiretorService;
