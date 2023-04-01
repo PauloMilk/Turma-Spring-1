@@ -3,13 +3,15 @@ package br.com.escola.admin.models;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "curso")
 public class Curso {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
 
     @ManyToOne
+    @JoinColumn(name = "professor")
     private Professor professor;
 
     public Curso() {

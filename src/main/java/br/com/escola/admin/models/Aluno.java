@@ -3,9 +3,10 @@ package br.com.escola.admin.models;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "aluno")
 public class Aluno {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
 

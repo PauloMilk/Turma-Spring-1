@@ -6,30 +6,30 @@ import java.io.Serializable;
 
 @Embeddable
 public class CursoAlunoNotaId implements Serializable {
-    private Long alunoId;
-    private Long cursoId;
+    private Long aluno_id;
+    private Long curso_id;
 
     public CursoAlunoNotaId() {
     }
 
-    public CursoAlunoNotaId(Long alunoId, Long cursoId) {
-        this.alunoId = alunoId;
-        this.cursoId = cursoId;
+    public CursoAlunoNotaId(Long aluno_id, Long curso_id) {
+        this.aluno_id = aluno_id;
+        this.curso_id = curso_id;
     }
 
-    public Long getAlunoId() {
-        return alunoId;
+    public Long getAluno_id() {
+        return aluno_id;
     }
 
-    public void setAlunoId(Long alunoId) {
-        this.alunoId = alunoId;
+    public void setAluno_id(Long aluno_id) {
+        this.aluno_id = aluno_id;
     }
 
-    public Long getCursoId() {
-        return cursoId;
+    public Long getCurso_id() {
+        return curso_id;
     }
 
-    public void setCursoId(Long cursoId) {
-        this.cursoId = cursoId;
+    public void setCurso_id(Long curso_id) {
+        this.curso_id = curso_id;
     }
 }
