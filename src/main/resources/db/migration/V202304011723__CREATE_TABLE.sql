@@ -1,31 +1,31 @@
 
-CREATE TABLE aluno(
+CREATE TABLE if not exists aluno(
                          id int not null AUTO_INCREMENT PRIMARY KEY,
                          nome varchar(255) not null,
-                         cpf varchar(255) not null
+                         cpf varchar(255) not null unique
 );
 
-CREATE TABLE professor(
+CREATE TABLE if not exists professor(
                          id int not null AUTO_INCREMENT PRIMARY KEY,
                          nome varchar(255) not null,
-                         cpf varchar(255) not null,
+                         cpf varchar(255) not null unique,
                          especialidade varchar(255)
 );
 
-CREATE TABLE diretor(
+CREATE TABLE if not exists diretor(
                          id int not null AUTO_INCREMENT PRIMARY KEY,
                          nome varchar(255) not null,
-                         cpf varchar(255) not null
+                         cpf varchar(255) not null unique
 );
 
-CREATE TABLE curso(
+CREATE TABLE if not exists curso(
                          id int not null AUTO_INCREMENT PRIMARY KEY,
                          nome varchar(255) not null,
                          professor int not null,
                          FOREIGN KEY (professor) REFERENCES professor(id)
 );
 
-CREATE TABLE cursoalunonota(
+CREATE TABLE if not exists cursoalunonota(
                          aluno_id int not null,
                          curso_id int not null,
                          nota double not null,

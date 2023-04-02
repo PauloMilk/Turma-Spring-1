@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,7 +45,13 @@ public class EscolaControllerAdvice {
 
     @ExceptionHandler(JdbcSQLIntegrityConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorDTO handleBusinessRuleException(JdbcSQLIntegrityConstraintViolationException ex) {
+    public ErrorDTO handleJdbcSQLIntegrityConstraintViolationException(JdbcSQLIntegrityConstraintViolationException ex) {
+        return new ErrorDTO(ex.getMessage(), "400");
+    }
+
+    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorDTO handleSQLIntegrityConstraintViolationException(SQLIntegrityConstraintViolationException ex) {
         return new ErrorDTO(ex.getMessage(), "400");
     }
 }
