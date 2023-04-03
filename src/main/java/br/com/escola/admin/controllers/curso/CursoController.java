@@ -30,8 +30,9 @@ public class CursoController {
     }
 
     @GetMapping("/relatorio")
-    public ResponseEntity<List<RelatorioNotasResponse>> relatorio(){
-        return ResponseEntity.ok().body(service.relatorioNotas());
+    public ResponseEntity<List<RelatorioNotasResponse>> relatorio(@RequestParam(required = false) Long curso,
+                                                                  @RequestParam(required = false) Long aluno){
+        return ResponseEntity.ok().body(service.relatorioNotas(curso, aluno));
     }
 
 

@@ -48,8 +48,8 @@ public class CursoService {
     }
 
 
-    public List<RelatorioNotasResponse> relatorioNotas() {
-        return cursoAlunoNotaRepository.gerarRelatorio();
+    public List<RelatorioNotasResponse> relatorioNotas(Long idCurso, Long idAluno) {
+        return cursoAlunoNotaRepository.gerarRelatorio(idCurso, idAluno);
 
     }
 }

@@ -25,7 +25,7 @@ CREATE TABLE if not exists curso(
                          FOREIGN KEY (professor) REFERENCES professor(id)
 );
 
-CREATE TABLE if not exists cursoalunonota(
+CREATE TABLE if not exists curso_aluno_nota(
                          aluno_id int not null,
                          curso_id int not null,
                          nota double not null,
