@@ -55,35 +55,21 @@ public class CursoService {
         repository.delete(curosSalvo);
     }
 
-    public boolean addAlunoAoCurso(Long id, Long idAluno) {
-        Curso curso = obter(id);
-
-        Aluno aluno = alunoRepository
-                .findById(idAluno)
-                .orElseThrow(() -> new ResourceNotFoundException(Aluno.class, idAluno));
-
-        var cursoAlunoNotaID = new CursoAlunoNotaID(aluno, curso);
+    public boolean addAlunoAoCurso(Long idCurso, Long idAluno) {
+        var cursoAlunoNotaID = getCursoAlunoNotaID(idCurso, idAluno);
         boolean estaMatriculado = cursoAlunoNotaRepository.existsById(cursoAlunoNotaID);
 
         if (!estaMatriculado) {
-            aluno.getCursos().add(curso);
-            curso.getAlunos().add(aluno);
-
-            cursoAlunoNotaRepository.save(new CursoAlunoNota(cursoAlunoNotaID, 0.0));
+            cursoAlunoNotaRepository.save(new CursoAlunoNota(cursoAlunoNotaID, 0));
             return true;
         }
 
         return false;
     }
 
-    public void atribuirNotaAoAluno(Long id, Long idAluno, Double nota) {
-        Curso curso = obter(id);
+    public void atribuirNotaAoAluno(Long idCurso, Long idAluno, Integer nota) {
+        var cursoAlunoNotaID = getCursoAlunoNotaID(idCurso, idAluno);
 
-        Aluno aluno = alunoRepository
-                .findById(idAluno)
-                .orElseThrow(() -> new ResourceNotFoundException(Aluno.class, idAluno));
-
-        var cursoAlunoNotaID = new CursoAlunoNotaID(aluno, curso);
         var cursoAlunoNota = cursoAlunoNotaRepository.findById(cursoAlunoNotaID)
                 .orElseThrow(
                         () -> new ResourceNotFoundException("Vinculo de aluno e curso não encontrado")
@@ -94,19 +80,24 @@ public class CursoService {
     }
 
     public double obterNotaDoCurso(Long idCurso, Long idAluno) {
-        Curso curso = obter(idCurso);
+        var cursoAlunoNotaID = getCursoAlunoNotaID(idCurso, idAluno);
 
-        Aluno aluno = alunoRepository
-                .findById(idAluno)
-                .orElseThrow(() -> new ResourceNotFoundException(Aluno.class, idAluno));
-
-        var cursoAlunoNotaID = new CursoAlunoNotaID(aluno, curso);
         var cursoAlunoNota = cursoAlunoNotaRepository.findById(cursoAlunoNotaID)
                 .orElseThrow(
                         () -> new ResourceNotFoundException("Vinculo de aluno e curso não encontrado")
                 );
 
         return cursoAlunoNota.getNota();
+    }
+
+    private CursoAlunoNotaID getCursoAlunoNotaID(Long idCurso, Long idAluno) {
+        Curso curso = obter(idCurso);
+
+        Aluno aluno = alunoRepository
+                .findById(idAluno)
+                .orElseThrow(() -> new ResourceNotFoundException(Aluno.class, idAluno));
+
+        return new CursoAlunoNotaID(aluno, curso);
     }
 
 }

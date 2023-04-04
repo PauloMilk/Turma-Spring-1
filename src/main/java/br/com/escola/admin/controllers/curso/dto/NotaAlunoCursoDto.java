@@ -10,7 +10,7 @@ public record NotaAlunoCursoDto(
 
         public static CursoAlunoNota to(NotaAlunoCursoDto dto) {
                 CursoAlunoNota cursoAlunoNota = new CursoAlunoNota();
-                cursoAlunoNota.setNota(dto.nota().doubleValue());
+                cursoAlunoNota.setNota(dto.nota().intValue());
                 return cursoAlunoNota;
         }
 

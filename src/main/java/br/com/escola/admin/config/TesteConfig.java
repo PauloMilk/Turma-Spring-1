@@ -66,24 +66,13 @@ public class TesteConfig implements CommandLineRunner {
 
         cursoRepository.saveAll(List.of(curso1, curso2, curso3));
 
-        aluno1.getCursos().add(curso1);
-        aluno1.getCursos().add(curso2);
-    
-        aluno2.getCursos().add(curso1);
-        aluno2.getCursos().add(curso2);
-        aluno2.getCursos().add(curso3);
-
-        aluno3.getCursos().add(curso2);
-
-        alunoRepository.saveAll(Arrays.asList(aluno1, aluno2, aluno3));
-
         cursoAlunoNotaRepository.saveAll(List.of(
-                new CursoAlunoNota(new CursoAlunoNotaID(aluno1, curso1), 0.0),
-                new CursoAlunoNota(new CursoAlunoNotaID(aluno1, curso2), 0.0),
-                new CursoAlunoNota(new CursoAlunoNotaID(aluno2, curso1), 0.0),
-                new CursoAlunoNota(new CursoAlunoNotaID(aluno2, curso2), 0.0),
-                new CursoAlunoNota(new CursoAlunoNotaID(aluno2, curso3), 0.0),
-                new CursoAlunoNota(new CursoAlunoNotaID(aluno3, curso2), 0.0)
+                new CursoAlunoNota(new CursoAlunoNotaID(aluno1, curso1), 0),
+                new CursoAlunoNota(new CursoAlunoNotaID(aluno1, curso2), 0),
+                new CursoAlunoNota(new CursoAlunoNotaID(aluno2, curso1), 0),
+                new CursoAlunoNota(new CursoAlunoNotaID(aluno2, curso2), 0),
+                new CursoAlunoNota(new CursoAlunoNotaID(aluno2, curso3), 0),
+                new CursoAlunoNota(new CursoAlunoNotaID(aluno3, curso2), 0)
         ));
     }
 

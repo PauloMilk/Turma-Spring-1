@@ -86,7 +86,7 @@ public class CursoController {
     public ResponseEntity<Void> atribuirNotaAoAlunoCurso(@PathVariable Long idCurso, @PathVariable Long idAluno,
                   @RequestBody NotaAlunoCursoDto notaAluno) {
 
-        service.atribuirNotaAoAluno(idCurso, idAluno, notaAluno.nota().doubleValue());
+        service.atribuirNotaAoAluno(idCurso, idAluno, notaAluno.nota().intValue());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 

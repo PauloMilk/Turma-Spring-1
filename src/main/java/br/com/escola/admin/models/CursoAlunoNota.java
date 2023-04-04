@@ -16,22 +16,22 @@ public class CursoAlunoNota implements Serializable {
     private CursoAlunoNotaID id;
 
     @Column(name = "vl_nota")
-    private Double nota;
+    private Integer nota;
 
     public CursoAlunoNota() {
 
     }
 
-    public CursoAlunoNota(CursoAlunoNotaID id, Double nota) {
+    public CursoAlunoNota(CursoAlunoNotaID id, Integer nota) {
         this.id = id;
         this.setNota(nota);
     }
 
-    public Double getNota() {
+    public Integer getNota() {
         return nota;
     }
 
-    public void setNota(Double nota) {
+    public void setNota(Integer nota) {
         this.nota = nota;
     }
 

@@ -4,9 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 @Entity
 @Table(name = "tb_aluno")
@@ -25,12 +23,12 @@ public class Aluno implements Serializable {
     @NotBlank(message = "O cpf do aluno não deve ser vazio ou nulo")
     private String cpf;
 
-    @ManyToMany
-    @JoinTable(name = "tb_aluno_curso",
-            joinColumns = @JoinColumn(name = "cd_aluno"),
-            inverseJoinColumns = @JoinColumn(name = "cd_curso")
-    )
-    private Set<Curso> cursos = new HashSet<>();
+//    @ManyToMany
+//    @JoinTable(name = "tb_aluno_curso",
+//            joinColumns = @JoinColumn(name = "cd_aluno"),
+//            inverseJoinColumns = @JoinColumn(name = "cd_curso")
+//    )
+//    private Set<Curso> cursos = new HashSet<>();
 
     public Aluno() {
 
@@ -41,9 +39,9 @@ public class Aluno implements Serializable {
         this.cpf = cpf;
     }
 
-    public boolean estaMatriculado(Curso curso) {
-        return this.cursos.contains(curso);
-    }
+//    public boolean estaMatriculado(Curso curso) {
+//        return this.cursos.contains(curso);
+//    }
     public Long getId() {
         return id;
     }
@@ -68,9 +66,9 @@ public class Aluno implements Serializable {
         return cpf;
     }
 
-    public Set<Curso> getCursos() {
-        return cursos;
-    }
+//    public Set<Curso> getCursos() {
+//        return cursos;
+//    }
 
     @Override
     public boolean equals(Object o) {

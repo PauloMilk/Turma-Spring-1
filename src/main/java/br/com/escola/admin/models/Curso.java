@@ -1,13 +1,10 @@
 package br.com.escola.admin.models;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
@@ -28,16 +25,16 @@ public class Curso {
     @Column(name = "ds_curso", nullable = false)
     private String descricao;
 
-    @Column(name = "ds_UrlImagem", nullable = true)
-    private String urlImagem;
-
     @ManyToOne
     @JoinColumn(name = "cd_professor", nullable = true)
     private Professor professor;
 
-    @JsonIgnore
-    @ManyToMany(mappedBy = "cursos")
-    private Set<Aluno> alunos = new HashSet<>();
+    @Column(name = "url_imagem", nullable = true)
+    private String urlImagem;
+
+//    @JsonIgnore
+//    @ManyToMany(mappedBy = "cursos")
+//    private Set<Aluno> alunos = new HashSet<>();
 
     public Curso() {
 
@@ -96,9 +93,9 @@ public class Curso {
         this.professor = professor;
     }
 
-    public Set<Aluno> getAlunos() {
-        return alunos;
-    }
+//    public Set<Aluno> getAlunos() {
+//        return alunos;
+//    }
 
     @Override
     public boolean equals(Object o) {
